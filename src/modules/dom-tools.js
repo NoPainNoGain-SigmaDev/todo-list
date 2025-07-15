@@ -5,9 +5,4 @@ function createEl(tag, props = {}, children = []) {
   return el;
 }
 
-function clearDOM() {
-  const contentContainer = document.getElementById("content");
-  contentContainer.innerHTML = "";
-}
-
-export { createEl, clearDOM };
+export { createEl};
