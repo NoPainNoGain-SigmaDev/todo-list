@@ -11,7 +11,7 @@
         <div class="nav-header">
           <div class="user">
             <div class="user-pp"></div>
-            <input id="username" type="text" placeholder="Your Username"/>
+            <input id="username" type="text" placeholder="Your Username" />
           </div>
           <button id="collapse-side-bar" class="hover-effect">
             <svg
@@ -42,50 +42,8 @@
           </button>
         </div>
         <!-- Here goes the nav of projects -->
-        <div id="nav-content">
-          <h2 class="content-title">My Projects</h2>
-          <!--  -->
-          <div class="project hover-effect" data-index = "0">
-            <div class="project-info">
-              <i class="fa-solid fa-folder-closed"></i>
-              <h2>Things ToDo</h2>
-            </div>
-            <div class="project-tools">
-              <button class="project-delete"><i class="fa-solid fa-trash"></i></button>
-            </div> 
-          </div>
-          <!--  -->
-          <div class="project hover-effect" data-index = "1">
-            <div class="project-info">
-              <i class="fa-solid fa-folder-closed"></i>
-              <h2>Home Chores</h2>
-            </div>
-            <div class="project-tools">
-              <button class="project-delete"><i class="fa-solid fa-trash"></i></button>
-            </div> 
-          </div>
-          <!--  -->
-          <div class="project hover-effect" data-index = "2">
-            <div class="project-info">
-              <i class="fa-solid fa-folder-closed"></i>
-              <h2>Shopping List</h2>
-            </div>
-            <div class="project-tools">
-              <button class="project-delete"><i class="fa-solid fa-trash"></i></button>
-            </div> 
-          </div>
-          <!--  -->
-          <div class="project hover-effect" data-index = "3">
-            <div class="project-info">
-              <i class="fa-solid fa-folder-closed"></i>
-              <h2>Travel Prep</h2>
-            </div>
-            <div class="project-tools">
-              <button class="project-delete"><i class="fa-solid fa-trash"></i></button>
-            </div> 
-          </div>
-         
-
+        <h2 class="content-title">My Projects</h2>
+        <div id="nav-content"></div>
       </nav>
       <p class="author">
         Built with sweat by
@@ -97,22 +55,22 @@
     <!-- Here goes the content to be displayed when a project is selected -->
     <div id="content">
       <button id="show-side-bar" class="hover-effect show-side-bar hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                fill="currentColor"
-                fill-rule="evenodd"
-                d="M19 4.001H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-12a2 2 0 0 0-2-2m-15 2a1 1 0 0 1 1-1h4v14H5a1 1 0 0 1-1-1zm6 13h9a1 1 0 0 0 1-1v-12a1 1 0 0 0-1-1h-9z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
-          </button>
-      <div class="project-container" data-index = "0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            fill-rule="evenodd"
+            d="M19 4.001H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-12a2 2 0 0 0-2-2m-15 2a1 1 0 0 1 1-1h4v14H5a1 1 0 0 1-1-1zm6 13h9a1 1 0 0 0 1-1v-12a1 1 0 0 0-1-1h-9z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+      <div class="project-container" data-index="0">
         <h1 class="project-title">Home Chores</h1>
         <!-- ToDo -->
         <div class="todo-container" data-index="0">
@@ -193,14 +151,13 @@
             <p class="todo-title">Change the bulb</p>
             <button class="delete"><i class="fa-solid fa-trash"></i></button>
           </div>
-           <div class="level-3-info">
+          <div class="level-3-info">
             <div class="date-container">
               <i class="fa-regular fa-calendar-minus"></i>
               <p class="date">May 23 2025</p>
             </div>
           </div>
         </div>
-        
       </div>
     </div>
 
