@@ -2,6 +2,7 @@ import "./styles/global.css";
 import "./styles/side-bar.css";
 import "./styles/content.css";
 import "./styles/dialog-add-new-todo.css";
+import { createUser } from "./modules/create-user.js";
 import { screenController } from "./modules/screen-controller.js";
 
 const collapseSideBar = document.getElementById("collapse-side-bar");
@@ -19,5 +20,9 @@ showSideBar.addEventListener("click", () => {
   content.style.width = "calc(100vw - 280px)";
   showSideBar.classList.toggle("hidden");
 });
+
+//new user or stored user data SINGLETON USER
+export const user = createUser();
+
 
 screenController();
