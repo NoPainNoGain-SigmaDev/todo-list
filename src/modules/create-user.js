@@ -7,6 +7,12 @@ export function createUser(name = "SCRUM MAISTER") {
   projects.push(defaultProject);
 
   const getProjects = () => projects;
+  const getProject = (projectId) => {
+    const targetProject = projects.find(
+      (project) => project.getId() === projectId
+    );
+    return targetProject;
+  };
   const newProject = (newProjectName) =>
     projects.push(createProject(newProjectName));
   const userName = () => name;
@@ -14,15 +20,11 @@ export function createUser(name = "SCRUM MAISTER") {
     createTodo({title, description, dueDate, priority});
   const newChecklistItem = (title) => createTodo({title});
   const addToProject = (toDo, projectId = getProjects()[0].getId()) => {
-    const targetProject = projects.find(
-      (project) => project.getId() === projectId
-    );
+    const targetProject = getProject(projectId);
     targetProject.addTodo(toDo);
   };
   const deleteFromProject = (todoId, projectId) => {
-    const targetProject = projects.find(
-      (project) => project.getId() === projectId
-    );
+    const targetProject = getProject(projectId);
     const targetTodo = targetProject.getProjectContent().find(todo => todo.getId() === todoId);
     targetProject.removeTodo(targetTodo.getId());
   };
@@ -48,6 +50,7 @@ export function createUser(name = "SCRUM MAISTER") {
   }
   return {
     getProjects,
+    getProject,
     newProject,
     userName,
     newTodo,
