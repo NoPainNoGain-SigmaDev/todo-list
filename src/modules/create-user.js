@@ -3,7 +3,7 @@ import { createTodo } from "./create-todo";
 
 export function createUser(name = "SCRUM MAISTER") {
   const projects = []; //collection of projects
-  const defaultProject = createProject("My ToDos");
+  const defaultProject = createProject("Things ToDo");
   projects.push(defaultProject);
 
   const getProjects = () => projects;
