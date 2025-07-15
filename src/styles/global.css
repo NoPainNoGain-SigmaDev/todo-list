@@ -1,0 +1,68 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css");
+
+:root {
+  --color-primary: #ffffff;
+  --color-secondary: #fcfaf8;
+  --color-accent: #dc4c3e;
+  --color-subtle: #aaa;
+  --color-separator: #e6e6e6;
+
+  --color-text: #202020;
+  --color-text-secondary: #555555;
+  --color-text-accent: #a81f00;
+  --color-text-date: #246FE0;
+
+  --color-priority-low-border: #AAA;
+  --color-priority-medium-border: #EB8909;
+  --color-priority-medium-fill: #FFEFE5;
+  --color-priority-high-border: #DC4C3E;
+  --color-priority-high-fill: #FFEFE5;
+
+  --font-size-header: 2.6rem;
+  --font-size-subheader: 1.8rem;
+  --font-size-regular: 1.5rem;
+  --font-size-small: 1.2rem;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background-color: var(--color-primary);
+
+  font-family: "Roboto";
+
+  width: 100vw;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: row;
+}
+button,
+.project,
+.todo-container {
+  cursor: pointer;
+}
+.hidden {
+  display: none!important;
+}
+
+.author {
+  position: absolute;
+  bottom: 2rem;
+  font-size: 1.2rem;
+}
+
+.author a {
+  color: var(--color-accent);
+}

@@ -1,0 +1,138 @@
+#side-bar {
+  width: 280px;
+  background-color: var(--color-secondary);
+  padding: 2rem;
+  position: relative;
+}
+#collapse-side-bar {
+  width: 40px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+}
+.nav-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.user {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+#username {
+  font-size: var(--font-size-subheader);
+  font-weight: 600;
+  border: none;
+  width: 100%;
+}
+
+.user-pp {
+  height: 25px;
+  aspect-ratio: 1/1;
+  background-color: #eb8909;
+  border-radius: 50%;
+}
+
+#add-new-todo i {
+  font-size: 2rem;
+  color: var(--color-accent);
+}
+#add-new-project i {
+  font-size: 2rem;
+  color: var(--color-text-date);
+}
+#add-new-project h2 {
+  color: #1a53b0;
+}
+#side-bar .project,
+#collapse-side-bar,
+#add-new-todo,
+#add-new-project {
+  background-color: transparent;
+  padding-left: 0.5rem;
+  border: none;
+  height: 4rem;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-text-accent);
+  border-radius: 8px;
+}
+#side-bar .project h2,
+#side-bar button h2 {
+  font-size: var(--font-size-subheader) !important;
+}
+
+.nav-utilities {
+  margin-bottom: 1rem;
+}
+.content-title {
+  font-size: var(--font-size-subheader);
+  color: var(--color-text-secondary);
+}
+
+.project-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  width: 80%;
+}
+
+.project-tools {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+}
+
+.project {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.project h2 {
+  font-size: var(--font-size-subheader) !important;
+
+  color: var(--color-text);
+  font-weight: 400;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.project .fa-folder-closed {
+  font-size: 1.8rem !important;
+  color: var(--color-text-secondary);
+}
+
+.hover-effect:hover {
+  background-color: #eeeeee !important;
+}
+
+.project-delete {
+  display: none;
+  background-color: transparent;
+  border: none;
+  color: var(--color-subtle);
+  font-size: 1.8rem;
+}
+
+#side-bar .project:hover .project-delete {
+  display: block !important;
+}
+
+.project-delete:hover {
+  color: var(--color-text-secondary);
+}
