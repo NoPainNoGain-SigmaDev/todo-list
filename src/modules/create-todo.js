@@ -2,9 +2,11 @@ export function createTodo(
   {title = "New ToDo",
   description = "",
   dueDate = "today",
-  priority = ""}
+  location = 0,
+  }
 ) {
   let completed = false;
+  let priority = "low";
   const id = crypto.randomUUID();
   const checklist = [];
 
@@ -22,6 +24,8 @@ export function createTodo(
   const getId = () => id;
   const isCompleted = () => completed;
   const updateStatus = () => (completed = !isCompleted());
+  const getLocation = () => location;
+  const updateLocation = (newLocation) => location = newLocation;
 
   return {
     getTitle,
@@ -38,5 +42,7 @@ export function createTodo(
     getId,
     isCompleted,
     updateStatus,
+    getLocation,
+    updateLocation,
   };
 }
