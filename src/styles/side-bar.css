@@ -103,6 +103,14 @@
   justify-content: space-between;
 }
 
+.selected-project{
+  background-color: var(--color-priority-medium-fill) !important;
+  color : var(--color-priority-high-border) !important;
+}
+.selected-project h2, .selected-project i{
+  color : var(--color-priority-high-border) !important;
+}
+
 .project h2 {
   font-size: var(--font-size-subheader) !important;
 
@@ -117,7 +125,7 @@
   color: var(--color-text-secondary);
 }
 
-.hover-effect:hover {
+.hover-effect:not(.selected-project):hover {
   background-color: #eeeeee !important;
 }
 
