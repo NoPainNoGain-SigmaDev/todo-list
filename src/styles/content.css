@@ -1,14 +1,24 @@
 #content {
   width: calc(100vw - 280px);
+  
 }
 
 .project-container {
   margin: 8rem auto 0 auto;
   width: 100%;
   max-width: 800px;
+  height: 85vh;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+  position: relative;
 }
 .project-title {
   font-size: var(--font-size-header);
+  position: sticky;
+  top: 0;
+  background-color: var(--color-primary);
+  z-index: 4;
 }
 
 .level-1-info {
