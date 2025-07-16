@@ -66,3 +66,32 @@ button,
 .author a {
   color: var(--color-accent);
 }
+
+
+
+/* SCROLLBAR */
+/* WebKit browsers (Chrome, Edge, Safari) */
+.scroll-container::-webkit-scrollbar {
+  width: 6px;       /* vertical scrollbar */
+  height: 6px;      /* horizontal scrollbar */
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Firefox */
+.scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
