@@ -4,59 +4,6 @@ import {user} from "../index.js";
 
 export function screenController() {
   
- 
-  
-
-  //admin controll window.user = user;
-
-  //demo
-console.log(user.userName());
-user.newProject("Checklist");
-user.newProject("Shopping List");
-user.newProject("Homework");
-
-const p = user.getProjects();
-const id0 = p[0].getId();
-const id1 = p[1].getId();
-const id2 = p[2].getId();
-const id3 = p[3].getId();
-
-user.addToProject(user.newTodo("Buy groceries", "Milk, eggs, chicken, rice", "2025-07-20", "medium"), id0);
-user.addToProject(user.newTodo("Weekly supplies", "Toilet paper, trash bags, soap", "2025-07-17", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries again", "Fruits, snacks, pasta, olive oil", "2025-07-21", "medium"), id0);
-user.addToProject(user.newTodo("Restock weekly items", "Detergent, toothpaste, sponges", "2025-07-18", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries", "Milk, eggs, chicken, rice", "2025-07-20", "medium"), id0);
-user.addToProject(user.newTodo("Weekly supplies", "Toilet paper, trash bags, soap", "2025-07-17", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries again", "Fruits, snacks, pasta, olive oil", "2025-07-21", "medium"), id0);
-user.addToProject(user.newTodo("Restock weekly items", "Detergent, toothpaste, sponges", "2025-07-18", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries", "Milk, eggs, chicken, rice", "2025-07-20", "medium"), id0);
-user.addToProject(user.newTodo("Weekly supplies", "Toilet paper, trash bags, soap", "2025-07-17", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries again", "Fruits, snacks, pasta, olive oil", "2025-07-21", "medium"), id0);
-user.addToProject(user.newTodo("Restock weekly items", "Detergent, toothpaste, sponges", "2025-07-18", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries", "Milk, eggs, chicken, rice", "2025-07-20", "medium"), id0);
-user.addToProject(user.newTodo("Weekly supplies", "Toilet paper, trash bags, soap", "2025-07-17", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries again", "Fruits, snacks, pasta, olive oil", "2025-07-21", "medium"), id0);
-user.addToProject(user.newTodo("Restock weekly items", "Detergent, toothpaste, sponges", "2025-07-18", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries", "Milk, eggs, chicken, rice", "2025-07-20", "medium"), id0);
-user.addToProject(user.newTodo("Weekly supplies", "Toilet paper, trash bags, soap", "2025-07-17", "low"), id0);
-user.addToProject(user.newTodo("Buy groceries again", "Fruits, snacks, pasta, olive oil", "2025-07-21", "medium"), id0);
-user.addToProject(user.newTodo("Restock weekly items", "Detergent, toothpaste, sponges", "2025-07-18", "low"), id0);
-
-user.addToProject(user.newTodo("Chores checklist", "Do laundry, vacuum room", "2025-07-16", "high"), id1);
-user.addToProject(user.newTodo("Pack for trip", "Socks, charger, headphones, passport", "2025-07-18", "medium"), id1);
-user.addToProject(user.newTodo("Weekend cleaning", "Wipe windows, clean fridge, sweep porch", "2025-07-19", "medium"), id1);
-user.addToProject(user.newTodo("Trip prep tasks", "Charge power bank, prepare clothes", "2025-07-17", "high"), id1);
-
-user.addToProject(user.newTodo("Study math", "Ch. 5 – Derivatives and applications", "2025-07-19", "high"), id2);
-user.addToProject(user.newTodo("English essay", "Write 3 paragraphs about Hamlet", "2025-07-20", "medium"), id2);
-user.addToProject(user.newTodo("Chemistry notes", "Summarize atomic structure lecture", "2025-07-18", "medium"), id2);
-user.addToProject(user.newTodo("History review", "Timeline of WWI events", "2025-07-21", "high"), id2);
-
-user.addToProject(user.newTodo("Refactor UI", "Clean up sidebar and make mobile-friendly", "2025-07-17", "low"), id3);
-user.addToProject(user.newTodo("Fix checklist bug", "Checklist items not saving correctly", "2025-07-15", "high"), id3);
-user.addToProject(user.newTodo("Optimize loading", "Add lazy loading to project previews", "2025-07-19", "medium"), id3);
-user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reopens", "2025-07-16", "high"), id3);
-  //end demo
 
   //DOM elements
   const addNewTodo = document.getElementById("add-new-todo");
@@ -92,6 +39,7 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
     });
   };
 
+
   const updateProjectContent = (project) =>{
     const createTodoElement = (todo) => {
         const priorityButton = createEl("button", {className : `toggle-completed priority-${todo.getPriority()}`},[
@@ -107,11 +55,18 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
             createEl("p", {className : "date", textContent : todo.getDueDate()}),
         ]);
 
-        const todoElement = createEl("div", {className : "todo-container"}, [
-            createEl("div", {className : "level-1-info"}, [priorityButton, todoTitle, deleteButton]),
-            createEl("div", {className : "level-2-info"}, [todoDescription]),
-            createEl("div", {className : "level-3-info"}, [todoDate]),
-        ]);
+        const todoContent = [];
+        todoContent.push(createEl("div", {className : "level-1-info"}, [priorityButton, todoTitle, deleteButton]));
+
+        if(!(todo.getDescription().trim() === "")){
+          todoContent.push(createEl("div", {className : "level-2-info"}, [todoDescription]));
+        }
+        if(!(todo.getDueDate().trim() === "")){
+          todoContent.push(createEl("div", {className : "level-3-info"}, [todoDate]));
+        }
+
+
+        const todoElement = createEl("div", {className : "todo-container"}, todoContent);
 
         return todoElement;
     }
@@ -135,6 +90,10 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
   addNewTodo.addEventListener("click", () => {
     dialogCont.dialogAddNewTodo();
     dialog.showModal();
+    dialog.addEventListener("submit", ()=>{
+      clear(content);
+      updateProjectContent(user.getProject(currentSelectedProject.id));
+    });
     dialog.addEventListener("cancel", ()=>{clear(dialog)});
   });
 
@@ -149,7 +108,7 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
   projectsNav.addEventListener("click", (e)=>{
     clear(content);
     //adding color to the selected project
-    const currentSelectedProject = projectsNav.querySelector(".selected-project");
+    currentSelectedProject = projectsNav.querySelector(".selected-project");
     if(currentSelectedProject){
         currentSelectedProject.classList.remove("selected-project");
         const folderIcon = currentSelectedProject.querySelector(".project-info i");
@@ -158,14 +117,14 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
     
     }
     
-    const newSelectedProject = e.target.closest(".project");
-    newSelectedProject.classList.toggle("selected-project");
-    const folderIcon = newSelectedProject.querySelector(".project-info i");
+    currentSelectedProject = e.target.closest(".project");
+    currentSelectedProject.classList.toggle("selected-project");
+    const folderIcon = currentSelectedProject.querySelector(".project-info i");
     folderIcon.classList.remove("fa-folder-closed");
     folderIcon.classList.add("fa-folder-open");
     
     //expanding the selected project in the  content section as a project container
-    updateProjectContent(user.getProject(newSelectedProject.id));
+    updateProjectContent(user.getProject(currentSelectedProject.id));
 
   });
 
@@ -173,7 +132,7 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
   //app first load
 
   updateProjectNav();
-  const firstChild = projectsNav.querySelector(":scope > *");
-  firstChild.click();
+  let currentSelectedProject = projectsNav.querySelector(":scope > *");
+  currentSelectedProject.click();
   
 };
