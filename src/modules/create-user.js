@@ -16,8 +16,8 @@ export function createUser(name = "SCRUM MAISTER") {
   const newProject = (newProjectName) =>
     projects.push(createProject(newProjectName));
   const userName = () => name;
-  const newTodo = (title, description, dueDate, priority) =>
-    createTodo({title, description, dueDate, priority});
+  const newTodo = (title, description, dueDate, priority, location) =>
+    createTodo({title, description, dueDate, priority, location});
   const newChecklistItem = (title) => createTodo({title});
   const addToProject = (toDo, projectId = getProjects()[0].getId()) => {
     const targetProject = getProject(projectId);
