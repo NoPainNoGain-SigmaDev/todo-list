@@ -121,9 +121,10 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
     const todos = project.getProjectContent();
     
 
-    const projectContent = createEl("div", {className : "project-container scroll-container", id : "project-container", dataSet : {dataId : projectId}}, [
+    const projectContent = createEl("div", {className : "project-container scroll-container", id : "project-container",}, [
         projectName,
     ]);
+    projectContent.dataset.id = projectId;
     todos.forEach(todo=> projectContent.appendChild(createTodoElement(todo)));
 
     
@@ -134,6 +135,7 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
   addNewTodo.addEventListener("click", () => {
     dialogCont.dialogAddNewTodo();
     dialog.showModal();
+    dialog.addEventListener("cancel", ()=>{clear(dialog)});
   });
 
   addNewProject.addEventListener("click", () => {
@@ -150,17 +152,25 @@ user.addToProject(user.newTodo("Debug form state", "Values reset when dialog reo
     const currentSelectedProject = projectsNav.querySelector(".selected-project");
     if(currentSelectedProject){
         currentSelectedProject.classList.remove("selected-project");
+        const folderIcon = currentSelectedProject.querySelector(".project-info i");
+        folderIcon.classList.remove("fa-folder-open");
+        folderIcon.classList.add("fa-folder-closed");
+    
     }
     
     const newSelectedProject = e.target.closest(".project");
     newSelectedProject.classList.toggle("selected-project");
-    console.log(user.getProject(newSelectedProject.id));
-
+    const folderIcon = newSelectedProject.querySelector(".project-info i");
+    folderIcon.classList.remove("fa-folder-closed");
+    folderIcon.classList.add("fa-folder-open");
+    
+    //expanding the selected project in the  content section as a project container
     updateProjectContent(user.getProject(newSelectedProject.id));
 
-    //expanding the selected project in the  content section as a project container
-
   });
+
+
+  //app first load
 
   updateProjectNav();
   const firstChild = projectsNav.querySelector(":scope > *");

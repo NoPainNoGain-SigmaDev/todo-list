@@ -121,7 +121,7 @@
   overflow: hidden;
   white-space: nowrap;
 }
-.project .fa-folder-closed {
+.project .fa-folder-closed, .project .fa-folder-open {
   font-size: 1.8rem !important;
   color: var(--color-text-secondary);
 }
