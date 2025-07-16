@@ -3,7 +3,7 @@ export function createTodo(
   description = "",
   dueDate = "today",
   priority = "low",
-  location = 0,
+  location = "",
   }
 ) {
   let completed = false;
