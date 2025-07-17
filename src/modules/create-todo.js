@@ -1,7 +1,7 @@
 export function createTodo(
   {title = "New ToDo",
   description = "",
-  dueDate = "today",
+  dueDate = "",
   priority = "low",
   location = "",
   }
