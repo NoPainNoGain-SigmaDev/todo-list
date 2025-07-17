@@ -125,11 +125,7 @@ export function createForm() {
       );
 
       user.getProject(projectId).addTodo(newTodo);
-
       dialog.close();
-      dialog.innerHTML = "";
-      console.log("close");
-      user.self();
     });
 
     textArea.addEventListener("input", () => autoResize(textArea));
@@ -186,25 +182,24 @@ export function createForm() {
       user.newProject(newProjectName);
 
       closeDialog();
-
-      user.self();
     });
 
     return form;
   };
-  const formExpandTodo = (todo, avaiableProjects) => {
+  const formExpandTodo = (todo) => {
     const title = todo.getTitle();
     const description = todo.getDescription();
     const date = todo.getDueDate();
     const priority = todo.getPriority();
     const id = todo.getId();
+    const avaiableProjects = user.getProjects();
 
     //option selection for all avaiable projects
     const projects = [];
 
     avaiableProjects.forEach((project) => {
       const projectOption = createEl("option", {
-        textContent: project.getTitle(),
+        textContent: project.getProjectName(),
       });
       projectOption.dataset.id = project.getId();
 
@@ -244,7 +239,6 @@ export function createForm() {
         id: "priority-select",
       },
       [
-        createEl("option", { value: "default", textContent: priority }),
         createEl("option", {
           className: "select-priority-low",
           textContent: "Low",
@@ -310,21 +304,17 @@ export function createForm() {
       "form",
       {
         id: "form",
-        dataset: { todoId: id },
       },
       [formTop, formBottom]
     );
 
+    form.dataset.id = id;
+
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-
-      const newProjectName = document.getElementById("title").value;
-      user.newProject(newProjectName);
-
       closeDialog();
-
-      user.self();
     });
+
 
     return form;
   };
