@@ -12,6 +12,12 @@ export function createProject(name = "ToDo List") {
     );
     projectTodos.splice(targetTodo, 1);
   };
+  const getTodo = (todoId) => {
+    const targetTodo = projectTodos.find(
+      (todo) => todo.getId() === todoId
+    );
+    return targetTodo;
+  }
 
   return {
     getProjectName,
@@ -19,5 +25,6 @@ export function createProject(name = "ToDo List") {
     addTodo,
     removeTodo,
     getId,
+    getTodo,
   };
 }
