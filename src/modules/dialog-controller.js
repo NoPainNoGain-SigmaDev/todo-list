@@ -17,13 +17,6 @@ export function dialogController() {
   // format dialog for expanding a todo
   const dialogExpandTodo = (todo) => {
     dialog.appendChild(createForm().formExpandTodo(todo));
-    const form = document.getElementById("form");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      dialog.close();
-      dialog.innerHTML = "";
-      console.log("close");
-    });
     console.log("DIALOG EXPAND TODO");
   };
 
