@@ -1,4 +1,4 @@
-import { createForm } from "./create-form";
+import { createForm } from "./form-controller";
 
 export function dialogController() {
   const dialog = document.getElementById("dialog");
