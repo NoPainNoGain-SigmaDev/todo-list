@@ -30,7 +30,7 @@ export function screenController() {
     );
     project.click();
   };
-
+  //correcting last commit 
   const setCurrentProject = (element) => {
     if (currentSelectedProject) {
       currentSelectedProject.classList.remove("selected-project");
