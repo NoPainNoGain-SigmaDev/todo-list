@@ -25,7 +25,6 @@ export function screenController() {
     const project = projectsNav.querySelector(
       `[data-id="${currentSelectedProject?.dataset.id}"]`
     );
-    console.log(currentSelectedProject?.dataset.id);
     project.click();
   };
 
@@ -168,11 +167,17 @@ export function screenController() {
       if (toggleBtn) {
         const projectContainer = document.getElementById("project-container");
         const todo = e.target.closest(".todo-container");
+        const todoId = todo.dataset.id;
+        const currentProject = getCurrentProject();
+        const currentProjectId = currentProject.getId();
+        const todoObj = currentProject.getTodo(todoId);
 
-        user.deleteFromProject(todo.dataset.id, getCurrentProject().getId());
-        updateProjectContent(getCurrentProject());
-        console.log(todo.dataset.id);
 
+        user.addToHistory(todoObj);
+        user.deleteFromProject(todoId, currentProjectId);
+        updateProjectContent(currentProject);
+        console.log(todoId);
+        user.self();
         return;
       }
 
