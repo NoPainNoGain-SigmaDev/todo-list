@@ -21,6 +21,27 @@ export function screenController() {
     return user.getProject(id);
   };
 
+  const clickProject = () => {
+    const project = projectsNav.querySelector(
+      `[data-id="${currentSelectedProject?.dataset.id}"]`
+    );
+    console.log(currentSelectedProject?.dataset.id);
+    project.click();
+  };
+
+  const setCurrentProject = (element) => {
+    if (currentSelectedProject) {
+      currentSelectedProject.classList.remove("selected-project");
+      const icon = currentSelectedProject.querySelector(".project-info i");
+      icon.classList.replace("fa-folder-open", "fa-folder-closed");
+    }
+
+    currentSelectedProject = element;
+    currentSelectedProject.classList.add("selected-project");
+    const icon = currentSelectedProject.querySelector(".project-info i");
+    icon.classList.replace("fa-folder-closed", "fa-folder-open");
+  };
+
   const createProjectElement = (project) => {
     const icon = createEl("i", { className: "fa-regular fa-folder-closed" });
     const title = createEl("h2", { textContent: project.getProjectName() });
@@ -139,19 +160,6 @@ export function screenController() {
     addProjectContainerListeners(container);
   };
 
-  const setCurrentProject = (element) => {
-    if (currentSelectedProject) {
-      currentSelectedProject.classList.remove("selected-project");
-      const icon = currentSelectedProject.querySelector(".project-info i");
-      icon.classList.replace("fa-folder-open", "fa-folder-closed");
-    }
-
-    currentSelectedProject = element;
-    currentSelectedProject.classList.add("selected-project");
-    const icon = currentSelectedProject.querySelector(".project-info i");
-    icon.classList.replace("fa-folder-closed", "fa-folder-open");
-  };
-
   const addProjectContainerListeners = (container) => {
     container.addEventListener("click", (e) => {
       const toggleBtn = e.target.closest(".toggle-completed");
@@ -160,12 +168,10 @@ export function screenController() {
       if (toggleBtn) {
         const projectContainer = document.getElementById("project-container");
         const todo = e.target.closest(".todo-container");
-    
+
         user.deleteFromProject(todo.dataset.id, getCurrentProject().getId());
         updateProjectContent(getCurrentProject());
         console.log(todo.dataset.id);
-        
-        
 
         return;
       }
@@ -185,7 +191,14 @@ export function screenController() {
     dialogCont.dialogAddNewProject();
     dialog.showModal();
 
-    dialog.addEventListener("close", updateProjectNav, { once: true });
+    dialog.addEventListener(
+      "close",
+      () => {
+        updateProjectNav();
+        clickProject();
+      },
+      { once: true }
+    );
     dialog.addEventListener("cancel", () => clear(dialog), { once: true });
   });
 
@@ -216,6 +229,6 @@ export function screenController() {
   // ----------- App Load -----------
 
   updateProjectNav();
-  const firstProject = projectsNav.querySelector(":scope > .project");
-  firstProject.click();
+  currentSelectedProject = projectsNav.querySelector(":scope > .project");
+  clickProject();
 }
