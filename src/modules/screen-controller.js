@@ -22,7 +22,7 @@ export function screenController() {
   };
 
   const createProjectElement = (project) => {
-    const icon = createEl("i", { className: "fa-solid fa-folder-closed" });
+    const icon = createEl("i", { className: "fa-regular fa-folder-closed" });
     const title = createEl("h2", { textContent: project.getProjectName() });
     const info = createEl("div", { className: "project-info" }, [icon, title]);
 
@@ -158,7 +158,15 @@ export function screenController() {
       const todoContainer = e.target.closest(".todo-container");
 
       if (toggleBtn) {
-        console.log("Toggle completed");
+        const projectContainer = document.getElementById("project-container");
+        const todo = e.target.closest(".todo-container");
+    
+        user.deleteFromProject(todo.dataset.id, getCurrentProject().getId());
+        updateProjectContent(getCurrentProject());
+        console.log(todo.dataset.id);
+        
+        
+
         return;
       }
 
