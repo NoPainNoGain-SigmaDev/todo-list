@@ -8,11 +8,14 @@ export function screenController() {
   // DOM elements
   const addNewTodo = document.getElementById("add-new-todo");
   const addNewProject = document.getElementById("add-new-project");
+  const history = document.getElementById("history");
   const dialog = document.getElementById("dialog");
   const projectsNav = document.getElementById("nav-content");
   const content = document.getElementById("content");
 
   let currentSelectedProject = null;
+  let currentlyHistory = false;
+  let pastWasHistory = false;
 
   // ----------- Helper Functions -----------
 
@@ -31,14 +34,23 @@ export function screenController() {
   const setCurrentProject = (element) => {
     if (currentSelectedProject) {
       currentSelectedProject.classList.remove("selected-project");
-      const icon = currentSelectedProject.querySelector(".project-info i");
-      icon.classList.replace("fa-folder-open", "fa-folder-closed");
+      if (pastWasHistory) {
+        pastWasHistory = false;
+      } else {
+        const icon = currentSelectedProject.querySelector(".project-info i");
+        icon.classList.replace("fa-folder-open", "fa-folder-closed");
+      }
     }
-
     currentSelectedProject = element;
     currentSelectedProject.classList.add("selected-project");
-    const icon = currentSelectedProject.querySelector(".project-info i");
-    icon.classList.replace("fa-folder-closed", "fa-folder-open");
+
+    if (currentlyHistory) {
+      currentlyHistory = false;
+      pastWasHistory = true;
+    } else {
+      const icon = currentSelectedProject.querySelector(".project-info i");
+      icon.classList.replace("fa-folder-closed", "fa-folder-open");
+    }
   };
 
   const createProjectElement = (project) => {
@@ -172,16 +184,15 @@ export function screenController() {
         const currentProjectId = currentProject.getId();
         const todoObj = currentProject.getTodo(todoId);
 
-
         user.addToHistory(todoObj);
         user.deleteFromProject(todoId, currentProjectId);
         updateProjectContent(currentProject);
-        console.log(todoId);
-        user.self();
         return;
       }
 
       if (todoContainer) {
+        const isInHistory = document.querySelector(".project-title");
+
         const todoId = todoContainer.dataset.id;
         const todo = getCurrentProject().getTodo(todoId);
         dialogCont.dialogExpandTodo(todo);
@@ -231,9 +242,19 @@ export function screenController() {
     updateProjectContent(getCurrentProject());
   });
 
+  history.addEventListener("click", () => {
+    currentlyHistory = true;
+    const clickedProject = history;
+    if (!clickedProject) return;
+
+    setCurrentProject(clickedProject);
+    updateProjectContent(user.getHistory());
+  });
+
   // ----------- App Load -----------
 
   updateProjectNav();
   currentSelectedProject = projectsNav.querySelector(":scope > .project");
   clickProject();
+  history.dataset.id = user.getHistory().getId();
 }
