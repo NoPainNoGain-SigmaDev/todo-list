@@ -37,25 +37,37 @@
 .user-pp {
   height: 25px;
   aspect-ratio: 1/1;
-  background-color: #eb8909;
+  background-color: var(--color-text-secondary);
   border-radius: 50%;
 }
 
 #add-new-todo i {
   font-size: 2rem;
-  color: var(--color-accent);
+  color: var(--color-add-todo-icon);
+}
+#add-new-todo h2{
+  color: var(--color-add-todo-text);
 }
 #add-new-project i {
   font-size: 2rem;
-  color: var(--color-text-date);
+  color: var(--color-add-project-icon);
 }
 #add-new-project h2 {
-  color: #1a53b0;
+  color: var(--color-add-project-text);
+}
+#history i {
+  font-size: 2rem;
+  color: var(--color-get-history-icon);
+
+}
+#history h2 {
+   color: var(--color-get-history-text);
 }
 #side-bar .project,
 #collapse-side-bar,
 #add-new-todo,
-#add-new-project {
+#add-new-project,
+#history {
   background-color: transparent;
   padding-left: 0.5rem;
   border: none;
