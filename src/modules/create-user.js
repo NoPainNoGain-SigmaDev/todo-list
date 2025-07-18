@@ -3,7 +3,7 @@ import { createTodo } from "./create-todo";
 
 export function createUser(name = "SCRUM MAISTER") {
   const projects = []; //collection of projects
-  const history = []; //collection al completed todos
+  const history = createProject("History"); //collection al completed todos
   const defaultProject = createProject("Things ToDo");
   projects.push(defaultProject);
 
@@ -36,7 +36,7 @@ export function createUser(name = "SCRUM MAISTER") {
     projects.splice(targetProject, 1);
   }
   const getHistory = () => history;
-  const addToHistory = (todo) => history.push(todo);
+  const addToHistory = (todo) => history.addTodo(todo);
 
   const self = () =>{
     console.log("PROJECTS----------------------------------------------------");
@@ -49,7 +49,7 @@ export function createUser(name = "SCRUM MAISTER") {
         })
     });
     console.log("HISTORY----------------------------------------------------");
-    getHistory().forEach(completedTodo => {
+    history.getProjectContent().forEach(completedTodo => {
       console.log("TITLE: " + completedTodo.getTitle() + " LOCATION: " + completedTodo.getLocation() + " ID: " + completedTodo.getId());
     });
   }
