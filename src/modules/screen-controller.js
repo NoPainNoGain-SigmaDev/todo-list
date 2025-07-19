@@ -30,12 +30,11 @@ export function screenController() {
     );
     project.click();
   };
-  //correcting last commit 
   const setCurrentProject = (element) => {
     if (currentSelectedProject) {
       currentSelectedProject.classList.remove("selected-project");
       if (pastWasHistory) {
-        pastWasHistory = false;
+        currentlyHistory = false;
       } else {
         const icon = currentSelectedProject.querySelector(".project-info i");
         icon.classList.replace("fa-folder-open", "fa-folder-closed");
@@ -45,9 +44,9 @@ export function screenController() {
     currentSelectedProject.classList.add("selected-project");
 
     if (currentlyHistory) {
-      currentlyHistory = false;
       pastWasHistory = true;
     } else {
+      pastWasHistory = false;
       const icon = currentSelectedProject.querySelector(".project-info i");
       icon.classList.replace("fa-folder-closed", "fa-folder-open");
     }
@@ -174,10 +173,17 @@ export function screenController() {
   const addProjectContainerListeners = (container) => {
     container.addEventListener("click", (e) => {
       const toggleBtn = e.target.closest(".toggle-completed");
+      const deleteBtn = e.target.closest(".delete");
       const todoContainer = e.target.closest(".todo-container");
 
+       if(deleteBtn){
+        const choice  = confirm("sure?");
+        if(choice) console.log("deleting");
+        
+        return;
+      }
+
       if (toggleBtn) {
-        const projectContainer = document.getElementById("project-container");
         const todo = e.target.closest(".todo-container");
         const todoId = todo.dataset.id;
         const currentProject = getCurrentProject();
@@ -191,13 +197,23 @@ export function screenController() {
       }
 
       if (todoContainer) {
-        const isInHistory = document.querySelector(".project-title");
-
         const todoId = todoContainer.dataset.id;
-        const todo = getCurrentProject().getTodo(todoId);
-        dialogCont.dialogExpandTodo(todo);
+        let todo = "";
+        if (currentlyHistory) {
+          todo = user.getHistory().getTodo(todoId);
+          dialogCont.dialogExpandTodo(todo);
+          const form = document.getElementById("form");
+          [...form.elements].forEach((el) => (el.disabled = true));
+        } else {
+          todo = getCurrentProject().getTodo(todoId);
+          dialogCont.dialogExpandTodo(todo);
+        }
         dialog.showModal();
+        dialog.addEventListener("cancel", () => clear(dialog), { once: true });
       }
+
+     
+
     });
   };
 
