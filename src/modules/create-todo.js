@@ -16,8 +16,7 @@ export function createTodo({
       ).toString(16)
     );
   }
-  const randomUUID = crypto.randomUUID();
-  const id = randomUUID ? randomUUID : generateUUID();
+  const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
   const checklist = [];
 
   const getTitle = () => title;
