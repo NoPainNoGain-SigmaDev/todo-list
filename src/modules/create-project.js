@@ -9,7 +9,8 @@ export function createProject(name = "ToDo List") {
       ).toString(16)
     );
   }
-  const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
+  const randomUUID = crypto.randomUUID();
+  const id = randomUUID ? randomUUID : generateUUID();
 
   const getProjectName = () => name;
   const getProjectContent = () => projectTodos;
