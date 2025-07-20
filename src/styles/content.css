@@ -152,3 +152,32 @@
   border-radius: 5px;
 }
 
+.form-confirm{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0 2rem 0;
+}
+.form-confirm button, .form-confirm input{
+  height: 40px!important;
+  width: 120px!important;
+  font-weight: 600;
+  font-size: 1.8rem!important;
+}
+.form-confirm .form-actions{
+  margin-top: 1rem;
+}
+.form-confirm i {
+  font-size: 10rem;
+  color : var(--color-warning-icon);
+}
+.form-confirm h1{
+  font-size: 3rem;
+  color: var(--color-text-secondary);
+}
+.form-confirm h2{
+  font-size: 2rem;
+  font-weight: 800;
+  color : var(--color-subtle);
+}

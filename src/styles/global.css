@@ -31,6 +31,9 @@
   --color-get-history-icon: #eb8909;
   --color-get-history-text: #b85f00;
 
+  /* Confirm Colors */
+  --color-warning-icon : #eb8909;
+
   /* Font Sizes */
   --font-size-header: 2.6rem;
   --font-size-subheader: 1.8rem;
