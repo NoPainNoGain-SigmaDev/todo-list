@@ -228,6 +228,8 @@ export function createForm() {
       placeholder: "Description",
     });
 
+     descriptionArea.addEventListener("input", () => autoResize(descriptionArea));
+
     const level1 = createEl("fieldset", { className: "form-level-1" }, [
       titleInput,
       descriptionArea,
@@ -321,6 +323,32 @@ export function createForm() {
     );
 
     form.dataset.id = id;
+
+    const enableSubmit = () =>{
+      submitBtn.disabled = false;
+      submitBtn.classList.toggle("hidden");
+    }
+
+    titleInput.addEventListener("change", ()=>{
+      enableSubmit();
+      console.log("update");
+    });
+    descriptionArea.addEventListener("change", ()=>{
+      enableSubmit();
+      console.log("update");
+    });
+    dateInput.addEventListener("change", ()=>{
+      enableSubmit();
+      console.log("update");
+    });
+    prioritySelect.addEventListener("change", ()=>{
+      enableSubmit();
+      console.log("update");
+    });
+    projectSelect.addEventListener("change", ()=>{
+      enableSubmit();
+      console.log("update");
+    });
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
