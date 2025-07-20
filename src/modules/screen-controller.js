@@ -213,7 +213,11 @@ export function screenController() {
           todo = user.getHistory().getTodo(todoId);
           dialogCont.dialogExpandTodo(todo);
           const form = document.getElementById("form");
-          [...form.elements].forEach((el) => (el.disabled = true));
+          [...form.elements].forEach((el) => {
+            if(el.id === "dialog-close"){}else{
+              el.disabled = true;
+            }
+          });
         } else {
           todo = getCurrentProject().getTodo(todoId);
           dialogCont.dialogExpandTodo(todo);
