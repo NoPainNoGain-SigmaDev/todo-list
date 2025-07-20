@@ -192,6 +192,7 @@ export function createForm() {
     const date = todo.getDueDate();
     const priority = todo.getPriority();
     const id = todo.getId();
+    const location = todo.getLocation();
     const avaiableProjects = user.getProjects();
 
     //option selection for all avaiable projects
@@ -205,6 +206,12 @@ export function createForm() {
 
       projects.push(projectOption);
     });
+    //set first option to the current project
+    const indexCurrentProject = projects.findIndex(project=>project.dataset.id === location);
+    const currentProject = projects[indexCurrentProject];
+    projects.splice(indexCurrentProject, 1);
+    projects.unshift(currentProject);
+
 
     const titleInput = createEl("input", {
       id: "title",
