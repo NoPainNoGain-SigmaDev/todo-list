@@ -175,21 +175,22 @@ export function screenController() {
       const toggleBtn = e.target.closest(".toggle-completed");
       const deleteBtn = e.target.closest(".delete");
       const todoContainer = e.target.closest(".todo-container");
+      if(!(todoContainer && todoContainer.dataset))return;
+      const todoId = todoContainer.dataset.id;
+      const currentProject = getCurrentProject();
+      const currentProjectId = currentProject.getId();
+      const todoObj = currentProject.getTodo(todoId);
 
-       if(deleteBtn){
-        const choice  = confirm("sure?");
-        if(choice) console.log("deleting");
-        
+      if (deleteBtn) {
+        dialogCont.dialogDelete(todoId, currentProjectId);
+        dialog.showModal();
+        dialog.addEventListener("close", ()=>{
+          updateProjectContent(currentProject);
+        });
         return;
       }
 
       if (toggleBtn) {
-        const todo = e.target.closest(".todo-container");
-        const todoId = todo.dataset.id;
-        const currentProject = getCurrentProject();
-        const currentProjectId = currentProject.getId();
-        const todoObj = currentProject.getTodo(todoId);
-
         user.addToHistory(todoObj);
         user.deleteFromProject(todoId, currentProjectId);
         updateProjectContent(currentProject);
@@ -209,11 +210,7 @@ export function screenController() {
           dialogCont.dialogExpandTodo(todo);
         }
         dialog.showModal();
-        dialog.addEventListener("cancel", () => clear(dialog), { once: true });
       }
-
-     
-
     });
   };
 
@@ -231,7 +228,6 @@ export function screenController() {
       },
       { once: true }
     );
-    dialog.addEventListener("cancel", () => clear(dialog), { once: true });
   });
 
   addNewTodo.addEventListener("click", () => {
@@ -242,12 +238,9 @@ export function screenController() {
       "submit",
       () => {
         updateProjectContent(getCurrentProject());
-        clear(dialog);
       },
       { once: true }
     );
-
-    dialog.addEventListener("cancel", () => clear(dialog), { once: true });
   });
 
   projectsNav.addEventListener("click", (e) => {

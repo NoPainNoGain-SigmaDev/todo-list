@@ -315,6 +315,49 @@ export function createForm() {
       closeDialog();
     });
 
+    return form;
+  };
+
+  const formDelete = (todoId, projectId) => {
+    const warningIcon = createEl("i", {className : "fa-solid fa-circle-exclamation"});
+    const header = createEl("h1", {textContent : "Are you sure?"});
+    const subheader = createEl("h2", {textContent : "If you forget it, it’s not on the list anymore."});
+    const closeBtn = createEl("button", {
+      type: "button",
+      id: "dialog-close",
+      value: "Close",
+      formNoValidate: true,
+      textContent: "Go Back",
+    });
+    const submitBtn = createEl("input", {
+      type: "submit",
+      id: "form-add-todo",
+      value: "Delete",
+    });
+    const formActions = createEl("div", { className: "form-actions" }, [
+      closeBtn,
+      submitBtn,
+    ]);
+
+    const form = createEl("form", {id : "form", className : "form-confirm"}, [
+      warningIcon,
+      header,
+      subheader,
+      formActions,
+    ]);
+
+    closeBtn.addEventListener("click", () => {
+      console.log("NOT DELETE")
+      closeDialog();
+      return;
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      user.deleteFromProject(todoId, projectId);
+      console.log("YES DELETE")
+      closeDialog();
+    });
 
     return form;
   };
@@ -323,5 +366,6 @@ export function createForm() {
     formAddNewTodo,
     formAddNewProject,
     formExpandTodo,
+    formDelete,
   };
 }
