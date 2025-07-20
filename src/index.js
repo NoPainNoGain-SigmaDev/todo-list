@@ -40,8 +40,6 @@ user.addToProject(user.newTodo("Fix the leaky faucet", "Call maintenance or get 
 user.addToProject(user.newTodo("Email landlord", "Regarding parking issue", "2025-07-22", "medium", id0), id0);
 user.addToProject(user.newTodo("Backup phone", "Upload photos to cloud", "2025-07-22", "low", id0), id0);
 user.addToProject(user.newTodo("Update resume", "Add DoorDash experience", "2025-07-25", "high", id0), id0);
-user.addToProject(user.newTodo("Plan weekend trip", "Look for places to visit", "2025-07-27", "medium", id0), id0);
-user.addToProject(user.newTodo("Go for a run", "Try to beat 3-mile record", "", "low", id0), id0);
 
 // ---- Checklist ----
 user.addToProject(user.newTodo("Pack phone charger", "", "", "low", id1), id1);
