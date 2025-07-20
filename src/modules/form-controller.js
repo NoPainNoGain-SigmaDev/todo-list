@@ -190,7 +190,7 @@ export function createForm() {
     const title = todo.getTitle();
     const description = todo.getDescription();
     const date = todo.getDueDate();
-    const priority = todo.getPriority();
+    const todoPriority = todo.getPriority();
     const id = todo.getId();
     const location = todo.getLocation();
     const avaiableProjects = user.getProjects();
@@ -239,26 +239,31 @@ export function createForm() {
       value: date,
     });
 
+    //option selection for all avaiable priorities
+    const priorities = [];
+    const avaiablePriorities = ["low", "medium", "high"];
+
+    avaiablePriorities.forEach((priority) => {
+      const priorityOption = createEl("option", {
+        textContent: priority,
+        className : `select-priority-${priority}`,
+      });
+
+      priorities.push(priorityOption);
+    });
+    //set first option to the current priority
+    const indexCurrentPriority = priorities.findIndex(priority=>priority.textContent === todoPriority);
+    const currentPriority = priorities[indexCurrentPriority];
+    priorities.splice(indexCurrentPriority, 1);
+    priorities.unshift(currentPriority);
+
     const prioritySelect = createEl(
       "select",
       {
         className: "priority-select",
         id: "priority-select",
       },
-      [
-        createEl("option", {
-          className: "select-priority-low",
-          textContent: "Low",
-        }),
-        createEl("option", {
-          className: "select-priority-medium",
-          textContent: "Medium",
-        }),
-        createEl("option", {
-          className: "select-priority-high",
-          textContent: "High",
-        }),
-      ]
+      priorities,
     );
 
     const level2 = createEl("fieldset", { className: "form-level-2" }, [
