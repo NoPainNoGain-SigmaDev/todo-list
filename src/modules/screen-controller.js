@@ -20,8 +20,12 @@ export function screenController() {
   // ----------- Helper Functions -----------
 
   const getCurrentProject = () => {
-    const id = currentSelectedProject?.dataset.id;
-    return user.getProject(id);
+    if (currentlyHistory) {
+      return user.getHistory();
+    } else {
+      const id = currentSelectedProject?.dataset.id;
+      return user.getProject(id);
+    }
   };
 
   const clickProject = () => {
@@ -96,7 +100,7 @@ export function screenController() {
       textContent: todo.getTitle(),
     });
     let iconClassName = "fa-trash";
-    if(currentlyHistory){
+    if (currentlyHistory) {
       iconClassName = "fa-rotate-left";
     }
 
@@ -180,7 +184,7 @@ export function screenController() {
       const toggleBtn = e.target.closest(".toggle-completed");
       const deleteBtn = e.target.closest(".delete");
       const todoContainer = e.target.closest(".todo-container");
-      if(!(todoContainer && todoContainer.dataset))return;
+      if (!(todoContainer && todoContainer.dataset)) return;
       const todoId = todoContainer.dataset.id;
       const currentProject = getCurrentProject();
       const currentProjectId = currentProject.getId();
@@ -189,7 +193,7 @@ export function screenController() {
       if (deleteBtn) {
         dialogCont.dialogDelete(todoId, currentProjectId);
         dialog.showModal();
-        dialog.addEventListener("close", ()=>{
+        dialog.addEventListener("close", () => {
           updateProjectContent(currentProject);
         });
         return;
