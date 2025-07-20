@@ -95,8 +95,13 @@ export function screenController() {
       className: "todo-title",
       textContent: todo.getTitle(),
     });
+    let iconClassName = "fa-trash";
+    if(currentlyHistory){
+      iconClassName = "fa-rotate-left";
+    }
+
     const trashBtn = createEl("button", { className: "delete" }, [
-      createEl("i", { className: "fa-solid fa-trash" }),
+      createEl("i", { className: `fa-solid ${iconClassName}` }),
     ]);
 
     const topRow = createEl("div", { className: "level-1-info" }, [
