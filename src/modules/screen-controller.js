@@ -223,6 +223,9 @@ export function screenController() {
           dialogCont.dialogExpandTodo(todo);
         }
         dialog.showModal();
+        dialog.addEventListener("close", ()=>{
+          updateProjectContent(getCurrentProject());
+        });
       }
     });
   };
