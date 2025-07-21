@@ -27,6 +27,9 @@ export function createProject(name = "ToDo List") {
     );
     return targetTodo;
   }
+  const addToHistory = (newTodo) => {
+    projectTodos.unshift(newTodo);
+  }
 
   return {
     getProjectName,
@@ -35,5 +38,6 @@ export function createProject(name = "ToDo List") {
     removeTodo,
     getId,
     getTodo,
+    addToHistory,
   };
 }

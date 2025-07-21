@@ -36,7 +36,7 @@ export function createUser(name = "SCRUM MAISTER") {
     projects.splice(targetProject, 1);
   }
   const getHistory = () => history;
-  const addToHistory = (todo) => history.addTodo(todo);
+  const addToHistory = (todo) => history.addToHistory(todo);
 
   const self = () =>{
     console.log("PROJECTS----------------------------------------------------");
