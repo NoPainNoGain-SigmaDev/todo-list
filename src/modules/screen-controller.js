@@ -1,5 +1,5 @@
 import { dialogController } from "./dialog-controller";
-import { createEl, clear } from "./dom-tools";
+import { createEl, clear, autoResize } from "./dom-tools";
 import { user } from "../index.js";
 
 export function screenController() {
@@ -223,6 +223,7 @@ export function screenController() {
           dialogCont.dialogExpandTodo(todo);
         }
         dialog.showModal();
+        autoResize(dialog.querySelector("#description"));
         dialog.addEventListener("close", ()=>{
           updateProjectContent(getCurrentProject());
         });
