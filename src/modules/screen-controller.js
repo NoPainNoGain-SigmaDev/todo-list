@@ -88,12 +88,12 @@ export function screenController() {
 
   const createTodoElement = (todo) => {
     let disableToggleCompleted = false;
-    if(currentlyHistory)disableToggleCompleted = true;
+    if (currentlyHistory) disableToggleCompleted = true;
     const priorityBtn = createEl(
       "button",
       {
         className: `toggle-completed priority-${todo.getPriority()}`,
-        disabled : disableToggleCompleted,
+        disabled: disableToggleCompleted,
       },
       [createEl("i", { className: "fa-solid fa-check hidden" })]
     );
@@ -130,19 +130,42 @@ export function screenController() {
       );
     }
 
+    const bottomRowContent = [];
+
     if (todo.getDueDate().trim()) {
-      elements.push(
-        createEl("div", { className: "level-3-info" }, [
-          createEl("div", { className: "date-container" }, [
-            createEl("i", { className: "fa-regular fa-calendar-minus" }),
-            createEl("p", {
-              className: "date",
-              textContent: todo.getDueDate(),
-            }),
-          ]),
+      bottomRowContent.push(
+        createEl("div", { className: "date-container" }, [
+          createEl("i", { className: "fa-regular fa-calendar-minus" }),
+          createEl("p", {
+            className: "date",
+            textContent: todo.getDueDate(),
+          }),
         ])
       );
     }
+
+    if (currentlyHistory) {
+      bottomRowContent.push(
+        createEl("div", { className: "location" }, [
+          createEl(
+            "i", 
+            {className : "fa-regular fa-folder"}
+          ),
+          createEl("p", {
+            className: "location-title",
+            textContent: user.getProject(todo.getLocation()).getProjectName(),
+          }),
+        ])
+      );
+    }
+
+    const bottomRow = createEl(
+      "div",
+      { className: "level-3-info" },
+      bottomRowContent
+    );
+
+    if (bottomRowContent.length) elements.push(bottomRow);
 
     const container = createEl(
       "div",
@@ -217,7 +240,8 @@ export function screenController() {
           dialogCont.dialogExpandTodo(todo);
           const form = document.getElementById("form");
           [...form.elements].forEach((el) => {
-            if(el.id === "dialog-close"){}else{
+            if (el.id === "dialog-close") {
+            } else {
               el.disabled = true;
             }
           });
@@ -227,7 +251,7 @@ export function screenController() {
         }
         dialog.showModal();
         autoResize(dialog.querySelector("#description"));
-        dialog.addEventListener("close", ()=>{
+        dialog.addEventListener("close", () => {
           updateProjectContent(getCurrentProject());
         });
       }
