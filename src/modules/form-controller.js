@@ -1,4 +1,4 @@
-import { createEl, autoResize, closeDialog } from "./dom-tools.js";
+import { createEl, autoResize, closeDialog, clear } from "./dom-tools.js";
 import { user } from "../index.js";
 
 export function createForm() {
@@ -98,8 +98,6 @@ export function createForm() {
         projectSelect,
       ]),
     ]);
-
-    
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -207,11 +205,12 @@ export function createForm() {
       projects.push(projectOption);
     });
     //set first option to the current project
-    const indexCurrentProject = projects.findIndex(project=>project.dataset.id === location);
+    const indexCurrentProject = projects.findIndex(
+      (project) => project.dataset.id === location
+    );
     const currentProject = projects[indexCurrentProject];
     projects.splice(indexCurrentProject, 1);
     projects.unshift(currentProject);
-
 
     const titleInput = createEl("input", {
       id: "title",
@@ -228,7 +227,9 @@ export function createForm() {
       placeholder: "Description",
     });
 
-     descriptionArea.addEventListener("input", () => autoResize(descriptionArea));
+    descriptionArea.addEventListener("input", () =>
+      autoResize(descriptionArea)
+    );
 
     const level1 = createEl("fieldset", { className: "form-level-1" }, [
       titleInput,
@@ -248,13 +249,15 @@ export function createForm() {
     avaiablePriorities.forEach((priority) => {
       const priorityOption = createEl("option", {
         textContent: priority,
-        className : `select-priority-${priority}`,
+        className: `select-priority-${priority}`,
       });
 
       priorities.push(priorityOption);
     });
     //set first option to the current priority
-    const indexCurrentPriority = priorities.findIndex(priority=>priority.textContent === todoPriority);
+    const indexCurrentPriority = priorities.findIndex(
+      (priority) => priority.textContent === todoPriority
+    );
     const currentPriority = priorities[indexCurrentPriority];
     priorities.splice(indexCurrentPriority, 1);
     priorities.unshift(currentPriority);
@@ -265,7 +268,7 @@ export function createForm() {
         className: "priority-select",
         id: "priority-select",
       },
-      priorities,
+      priorities
     );
 
     const level2 = createEl("fieldset", { className: "form-level-2" }, [
@@ -324,44 +327,43 @@ export function createForm() {
 
     form.dataset.id = id;
 
-    const enableSubmit = () =>{
+    //check for changes
+    const enableSubmit = () => {
       submitBtn.disabled = false;
-      submitBtn.classList.toggle("hidden");
-    }
+      submitBtn.classList.remove("hidden");
+    };
+    let editing = false;
+    form.addEventListener("input", () => {
+      enableSubmit();
+      editing = true;
+    });
 
-    titleInput.addEventListener("change", ()=>{
-      enableSubmit();
-      console.log("update");
-    });
-    descriptionArea.addEventListener("change", ()=>{
-      enableSubmit();
-      console.log("update");
-    });
-    dateInput.addEventListener("change", ()=>{
-      enableSubmit();
-      console.log("update");
-    });
-    prioritySelect.addEventListener("change", ()=>{
-      enableSubmit();
-      console.log("update");
-    });
-    projectSelect.addEventListener("change", ()=>{
-      enableSubmit();
-      console.log("update");
+    closeBtn.addEventListener("click", () => {
+      if (editing) {
+        const dialogDiscard = document.getElementById("dialog-level-2");
+        clear(dialogDiscard);
+        dialogDiscard.appendChild(formDiscard());
+        dialogDiscard.showModal();
+      } else {
+        closeDialog();
+      }
     });
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      closeDialog();
     });
 
     return form;
   };
 
   const formDelete = (todoId, projectId) => {
-    const warningIcon = createEl("i", {className : "fa-solid fa-circle-exclamation"});
-    const header = createEl("h1", {textContent : "Are you sure?"});
-    const subheader = createEl("h2", {textContent : "If you forget it, it’s not on the list anymore."});
+    const warningIcon = createEl("i", {
+      className: "fa-solid fa-circle-exclamation",
+    });
+    const header = createEl("h1", { textContent: "Are you sure?" });
+    const subheader = createEl("h2", {
+      textContent: "If you forget it, it’s not on the list anymore.",
+    });
     const closeBtn = createEl("button", {
       type: "button",
       id: "dialog-close",
@@ -379,7 +381,7 @@ export function createForm() {
       submitBtn,
     ]);
 
-    const form = createEl("form", {id : "form", className : "form-confirm"}, [
+    const form = createEl("form", { id: "form", className: "form-confirm" }, [
       warningIcon,
       header,
       subheader,
@@ -387,7 +389,6 @@ export function createForm() {
     ]);
 
     closeBtn.addEventListener("click", () => {
-      console.log("NOT DELETE")
       closeDialog();
       return;
     });
@@ -395,11 +396,56 @@ export function createForm() {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       user.deleteFromProject(todoId, projectId);
-      console.log("YES DELETE")
       closeDialog();
     });
 
     return form;
+  };
+  const formDiscard = () => {
+    const dialogDiscard = document.getElementById("dialog-level-2");
+    const warningIcon = createEl("i", {
+      className: "fa-solid fa-circle-exclamation",
+    });
+    const header = createEl("h1", { textContent: "Discard changes?" });
+    const subheader = createEl("h2", {
+      textContent: "The unsaved changes will be discarted",
+    });
+    const closeBtn = createEl("button", {
+      type: "button",
+      id: "dialog-close",
+      value: "Close",
+      formNoValidate: true,
+      textContent: "Go Back",
+    });
+    const submitBtn = createEl("input", {
+      type: "submit",
+      id: "form-add-todo",
+      value: "Discard",
+    });
+    const formActions = createEl("div", { className: "form-actions" }, [
+      closeBtn,
+      submitBtn,
+    ]);
+
+    const formD = createEl("form", { id: "form", className: "form-confirm" }, [
+      warningIcon,
+      header,
+      subheader,
+      formActions,
+    ]);
+
+    closeBtn.addEventListener("click", () => {
+      dialogDiscard.close();
+      dialog.showModal();
+    });
+
+    formD.addEventListener("submit", (e) => {
+      e.preventDefault();
+      closeDialog();
+      dialogDiscard.close();
+    });
+
+    return formD;
   };
 
   return {
@@ -407,5 +453,6 @@ export function createForm() {
     formAddNewProject,
     formExpandTodo,
     formDelete,
+    formDiscard,
   };
 }
