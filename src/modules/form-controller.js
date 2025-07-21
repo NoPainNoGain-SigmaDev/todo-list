@@ -192,6 +192,7 @@ export function createForm() {
     const id = todo.getId();
     const location = todo.getLocation();
     const avaiableProjects = user.getProjects();
+    const dialogDiscard = document.getElementById("dialog-level-2");
 
     //option selection for all avaiable projects
     const projects = [];
@@ -227,7 +228,7 @@ export function createForm() {
       rows: "1",
       placeholder: "Description",
     });
-
+    autoResize(descriptionArea);
     descriptionArea.addEventListener("input", () =>
       autoResize(descriptionArea)
     );
@@ -282,11 +283,9 @@ export function createForm() {
       level2,
     ]);
 
-    const closeBtn = createEl("input", {
-      type: "submit",
+    const closeBtn = createEl("button", {
       id: "dialog-close",
-      value: "Close",
-      formNoValidate: true,
+      textContent: "Close",
       autofocus: true,
     });
 
@@ -296,7 +295,6 @@ export function createForm() {
       id: "form-add-todo",
       value: "Update",
       disabled: true,
-      autofocus: true,
     });
 
     const formActions = createEl("div", { className: "form-actions" }, [
@@ -338,19 +336,23 @@ export function createForm() {
       enableSubmit();
       editing = true;
     });
+    form.addEventListener("change", () => {
+      editing = true;
+    });
 
-    closeBtn.addEventListener("click", () => {
+    closeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
       if (editing) {
-        const dialogDiscard = document.getElementById("dialog-level-2");
         clear(dialogDiscard);
         dialogDiscard.appendChild(formDiscard());
         dialogDiscard.showModal();
       } else {
+        console.log("close main");
         closeDialog();
       }
     });
 
-    form.addEventListener("submit", (e) => {
+    submitBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
       const newTitle = titleInput.value;
@@ -360,7 +362,8 @@ export function createForm() {
       const newLocation = projectSelect.value;
 
       if (title !== newTitle) todo.updateTitle(newTitle);
-      if (description !== newDescription) todo.updateDescription(newDescription);
+      if (description !== newDescription)
+        todo.updateDescription(newDescription);
       if (date !== newDate) todo.updateDueDate(newDate);
       if (todoPriority !== newPriority) todo.updatePriority(newPriority);
       if (location !== newLocation) todo.updateLocation(newLocation);
@@ -369,6 +372,54 @@ export function createForm() {
     });
 
     return form;
+  };
+
+  const formDiscard = () => {
+    const dialogDiscard = document.getElementById("dialog-level-2");
+    const warningIcon = createEl("i", {
+      className: "fa-solid fa-circle-exclamation",
+    });
+    const header = createEl("h1", { textContent: "Discard changes?" });
+    const subheader = createEl("h2", {
+      textContent: "The unsaved changes will be discarted",
+    });
+    const closeBtn = createEl("button", {
+      type: "button",
+      id: "dialog-close",
+      value: "Close",
+      textContent: "Go Back",
+    });
+    const submitBtn = createEl("input", {
+      type: "submit",
+      id: "form-add-todo",
+      value: "Discard",
+    });
+    const formActions = createEl("div", { className: "form-actions" }, [
+      closeBtn,
+      submitBtn,
+    ]);
+
+    const formD = createEl("form", { id: "formd", className: "form-confirm" }, [
+      warningIcon,
+      header,
+      subheader,
+      formActions,
+    ]);
+
+    closeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      dialogDiscard.close();
+      console.log("close second");
+      return;
+    });
+
+    formD.addEventListener("submit", (e) => {
+      e.preventDefault();
+      closeDialog();
+      dialogDiscard.close();
+    });
+
+    return formD;
   };
 
   const formDelete = (todoId, projectId) => {
@@ -415,52 +466,6 @@ export function createForm() {
     });
 
     return form;
-  };
-  const formDiscard = () => {
-    const dialogDiscard = document.getElementById("dialog-level-2");
-    const warningIcon = createEl("i", {
-      className: "fa-solid fa-circle-exclamation",
-    });
-    const header = createEl("h1", { textContent: "Discard changes?" });
-    const subheader = createEl("h2", {
-      textContent: "The unsaved changes will be discarted",
-    });
-    const closeBtn = createEl("button", {
-      type: "button",
-      id: "dialog-close",
-      value: "Close",
-      formNoValidate: true,
-      textContent: "Go Back",
-    });
-    const submitBtn = createEl("input", {
-      type: "submit",
-      id: "form-add-todo",
-      value: "Discard",
-    });
-    const formActions = createEl("div", { className: "form-actions" }, [
-      closeBtn,
-      submitBtn,
-    ]);
-
-    const formD = createEl("form", { id: "form", className: "form-confirm" }, [
-      warningIcon,
-      header,
-      subheader,
-      formActions,
-    ]);
-
-    closeBtn.addEventListener("click", () => {
-      dialogDiscard.close();
-      dialog.showModal();
-    });
-
-    formD.addEventListener("submit", (e) => {
-      e.preventDefault();
-      closeDialog();
-      dialogDiscard.close();
-    });
-
-    return formD;
   };
 
   return {
