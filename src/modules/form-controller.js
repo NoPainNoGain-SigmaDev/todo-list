@@ -366,7 +366,11 @@ export function createForm() {
         todo.updateDescription(newDescription);
       if (date !== newDate) todo.updateDueDate(newDate);
       if (todoPriority !== newPriority) todo.updatePriority(newPriority);
-      if (location !== newLocation) todo.updateLocation(newLocation);
+      if(location !== newLocation){
+        todo.updateLocation(newLocation);
+        user.addToProject(todo, newLocation);
+        user.deleteFromProject(id, location);
+      }
 
       closeDialog();
     });
