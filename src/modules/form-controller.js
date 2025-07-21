@@ -201,6 +201,7 @@ export function createForm() {
         textContent: project.getProjectName(),
       });
       projectOption.dataset.id = project.getId();
+      projectOption.value = project.getId();
 
       projects.push(projectOption);
     });
@@ -351,6 +352,20 @@ export function createForm() {
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+
+      const newTitle = titleInput.value;
+      const newDescription = descriptionArea.value;
+      const newDate = dateInput.value;
+      const newPriority = prioritySelect.value;
+      const newLocation = projectSelect.value;
+
+      if (title !== newTitle) todo.updateTitle(newTitle);
+      if (description !== newDescription) todo.updateDescription(newDescription);
+      if (date !== newDate) todo.updateDueDate(newDate);
+      if (todoPriority !== newPriority) todo.updatePriority(newPriority);
+      if (location !== newLocation) todo.updateLocation(newLocation);
+
+      closeDialog();
     });
 
     return form;
