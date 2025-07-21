@@ -87,10 +87,13 @@ export function screenController() {
   };
 
   const createTodoElement = (todo) => {
+    let disableToggleCompleted = false;
+    if(currentlyHistory)disableToggleCompleted = true;
     const priorityBtn = createEl(
       "button",
       {
         className: `toggle-completed priority-${todo.getPriority()}`,
+        disabled : disableToggleCompleted,
       },
       [createEl("i", { className: "fa-solid fa-check hidden" })]
     );
