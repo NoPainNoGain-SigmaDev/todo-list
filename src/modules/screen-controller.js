@@ -23,7 +23,7 @@ export function screenController() {
     if (currentlyHistory) {
       return user.getHistory();
     } else {
-      const id = currentSelectedProject?.dataset.id;
+      const id = currentSelectedProject?.id;
       return user.getProject(id);
     }
   };
@@ -71,6 +71,7 @@ export function screenController() {
       "div",
       {
         className: "project hover-effect",
+        id : project.getId(),
       },
       [info, tools]
     );
@@ -184,6 +185,15 @@ export function screenController() {
     const projectTitle = createEl("input", {
       className: "project-title",
       value: project.getProjectName(),
+    });
+
+    projectTitle.addEventListener("change", ()=>{
+      if(projectTitle.value !== project.getProjectName()){
+        project.updateProjectName(projectTitle.value);
+        updateProjectNav();
+        const selector = `${project.getId()}`;
+        setCurrentProject(document.getElementById(selector));
+      }
     });
 
     const container = createEl(
