@@ -156,7 +156,7 @@ export function screenController() {
           createEl("i", { className: "fa-regular fa-folder" }),
           createEl("p", {
             className: "location-title",
-            textContent: user.getProject(todo.getLocation()).getProjectName(),
+            textContent: user.getProject(todo.getLocation())? user.getProject(todo.getLocation()).getProjectName() : "Deleted",
           }),
         ])
       );

@@ -472,7 +472,7 @@ export function createForm() {
     return form;
   };
 
-  const formRestore = (todo, projectId) => {
+  const formRestore = (todo) => {
     const warningIcon = createEl("i", {
       className: "fa-regular fa-circle-check",
     });
@@ -516,9 +516,9 @@ export function createForm() {
         todo.getDescription(),
         todo.getDueDate(),
         todo.getPriority(),
-        todo.getLocation()
+        user.getProject(todo.getLocation())? todo.getLocation() : user.getProjects()[0].getId(),
       );
-      user.addToProject(copyTodo, projectId);
+      user.addToProject(copyTodo, copyTodo.getLocation());
       closeDialog();
     });
 
