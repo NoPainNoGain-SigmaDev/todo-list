@@ -12,6 +12,7 @@ export function screenController() {
   const dialog = document.getElementById("dialog");
   const projectsNav = document.getElementById("nav-content");
   const content = document.getElementById("content");
+  const username = document.getElementById("username");
 
   let currentSelectedProject = null;
   let currentlyHistory = false;
@@ -317,6 +318,14 @@ export function screenController() {
 
     setCurrentProject(clickedProject);
     updateProjectContent(user.getHistory());
+  });
+
+  username.addEventListener("change", ()=>{
+    if(username.value !== user.userName()){
+      user.newUserName(username.value);
+    }else{
+      
+    }
   });
 
   // ----------- App Load -----------
