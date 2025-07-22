@@ -181,9 +181,9 @@ export function screenController() {
 
   const updateProjectContent = (project) => {
     clear(content);
-    const projectTitle = createEl("h1", {
+    const projectTitle = createEl("input", {
       className: "project-title",
-      textContent: project.getProjectName(),
+      value: project.getProjectName(),
     });
 
     const container = createEl(
