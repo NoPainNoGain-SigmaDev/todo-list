@@ -29,11 +29,19 @@ export function dialogController() {
     clear(dialog);
     dialog.appendChild(createForm().formRestore(todo, projectId));
   }
+  // format dialog for confirm delete project alert
+  const dialogDeleteProject = (projectId) => {
+    clear(dialog);
+    dialog.appendChild(createForm().formDeleteProject(projectId));
+  }
+
+  
   return {
     dialogAddNewTodo,
     dialogAddNewProject,
     dialogExpandTodo,
     dialogDelete,
     dialogRestore,
+    dialogDeleteProject,
   };
 }

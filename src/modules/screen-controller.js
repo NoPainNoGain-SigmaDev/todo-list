@@ -72,7 +72,7 @@ export function screenController() {
       "div",
       {
         className: "project hover-effect",
-        id : project.getId(),
+        id: project.getId(),
       },
       [info, tools]
     );
@@ -86,6 +86,10 @@ export function screenController() {
     user.getProjects().forEach((project) => {
       projectsNav.appendChild(createProjectElement(project));
     });
+    if(!currentSelectedProject){
+      currentSelectedProject = projectsNav.querySelector(":scope > .project");
+      clickProject();
+    }
   };
 
   const createTodoElement = (todo) => {
@@ -149,10 +153,7 @@ export function screenController() {
     if (currentlyHistory) {
       bottomRowContent.push(
         createEl("div", { className: "location" }, [
-          createEl(
-            "i", 
-            {className : "fa-regular fa-folder"}
-          ),
+          createEl("i", { className: "fa-regular fa-folder" }),
           createEl("p", {
             className: "location-title",
             textContent: user.getProject(todo.getLocation()).getProjectName(),
@@ -188,8 +189,8 @@ export function screenController() {
       value: project.getProjectName(),
     });
 
-    projectTitle.addEventListener("change", ()=>{
-      if(projectTitle.value !== project.getProjectName()){
+    projectTitle.addEventListener("change", () => {
+      if (projectTitle.value !== project.getProjectName()) {
         project.updateProjectName(projectTitle.value);
         updateProjectNav();
         const selector = `${project.getId()}`;
@@ -229,9 +230,9 @@ export function screenController() {
 
       if (deleteBtn) {
         //delete button acts like restore
-        if(currentlyHistory){
+        if (currentlyHistory) {
           dialogCont.dialogRestore(todoObj, todoObj.getLocation());
-        }else{
+        } else {
           dialogCont.dialogDelete(todoId, currentProjectId);
         }
         dialog.showModal();
@@ -304,11 +305,21 @@ export function screenController() {
   });
 
   projectsNav.addEventListener("click", (e) => {
+    const deleteBtn = e.target.closest(".project-delete");
     const clickedProject = e.target.closest(".project");
-    if (!clickedProject) return;
 
-    setCurrentProject(clickedProject);
-    updateProjectContent(getCurrentProject());
+    if (deleteBtn) {
+      dialogCont.dialogDeleteProject(clickedProject.id);
+      dialog.showModal();
+      dialog.addEventListener("close", () => {
+        currentSelectedProject = null;
+        updateProjectNav();
+      });
+    } else {
+      if (!clickedProject) return;
+      setCurrentProject(clickedProject);
+      updateProjectContent(getCurrentProject());
+    }
   });
 
   history.addEventListener("click", () => {
@@ -320,11 +331,10 @@ export function screenController() {
     updateProjectContent(user.getHistory());
   });
 
-  username.addEventListener("change", ()=>{
-    if(username.value !== user.userName()){
+  username.addEventListener("change", () => {
+    if (username.value !== user.userName()) {
       user.newUserName(username.value);
-    }else{
-      
+    } else {
     }
   });
 

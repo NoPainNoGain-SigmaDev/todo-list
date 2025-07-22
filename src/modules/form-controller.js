@@ -366,7 +366,7 @@ export function createForm() {
         todo.updateDescription(newDescription);
       if (date !== newDate) todo.updateDueDate(newDate);
       if (todoPriority !== newPriority) todo.updatePriority(newPriority);
-      if(location !== newLocation){
+      if (location !== newLocation) {
         todo.updateLocation(newLocation);
         user.addToProject(todo, newLocation);
         user.deleteFromProject(id, location);
@@ -516,9 +516,62 @@ export function createForm() {
         todo.getDescription(),
         todo.getDueDate(),
         todo.getPriority(),
-        todo.getLocation(),
+        todo.getLocation()
       );
       user.addToProject(copyTodo, projectId);
+      closeDialog();
+    });
+
+    return form;
+  };
+
+  const formDeleteProject = (projectId) => {
+    const warningIcon = createEl("i", {
+      className: "fa-solid fa-circle-exclamation",
+    });
+    const header = createEl("h1", { textContent: "Delete project?" });
+    const subheader = createEl("h2", {
+      textContent:
+        "Are you sure you want to delete this entire project? This action is permanent and cannot be undone.",
+    });
+    const closeBtn = createEl("button", {
+      type: "button",
+      id: "dialog-close",
+      value: "Close",
+      formNoValidate: true,
+      textContent: "Go Back",
+    });
+    const submitBtn = createEl("input", {
+      type: "submit",
+      id: "form-add-todo",
+      value: "Delete",
+    });
+    const formActions = createEl("div", { className: "form-actions" }, [
+      closeBtn,
+      submitBtn,
+    ]);
+
+    const form = createEl("form", { id: "form", className: "form-confirm" }, [
+      warningIcon,
+      header,
+      subheader,
+      formActions,
+    ]);
+
+    closeBtn.addEventListener("click", () => {
+      closeDialog();
+      return;
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (user.getProjects().length === 1) {
+        user.newProject("Things ToDo");
+        user.deleteProject(projectId);
+      } else {
+        user.deleteProject(projectId);
+      }
+
       closeDialog();
     });
 
@@ -532,5 +585,6 @@ export function createForm() {
     formDelete,
     formDiscard,
     formRestore,
+    formDeleteProject,
   };
 }
