@@ -472,11 +472,65 @@ export function createForm() {
     return form;
   };
 
+  const formRestore = (todo, projectId) => {
+    const warningIcon = createEl("i", {
+      className: "fa-regular fa-circle-check",
+    });
+    const header = createEl("h1", { textContent: "Want to bring it back?" });
+    const subheader = createEl("h2", {
+      textContent: "We’ll add a fresh copy of this to-do.",
+    });
+    const closeBtn = createEl("button", {
+      type: "button",
+      id: "dialog-close",
+      value: "Close",
+      formNoValidate: true,
+      textContent: "Go Back",
+    });
+    const submitBtn = createEl("input", {
+      type: "submit",
+      id: "form-add-todo",
+      value: "Restore",
+    });
+    const formActions = createEl("div", { className: "form-actions" }, [
+      closeBtn,
+      submitBtn,
+    ]);
+
+    const form = createEl("form", { id: "form", className: "form-confirm" }, [
+      warningIcon,
+      header,
+      subheader,
+      formActions,
+    ]);
+
+    closeBtn.addEventListener("click", () => {
+      closeDialog();
+      return;
+    });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const copyTodo = user.newTodo(
+        todo.getTitle(),
+        todo.getDescription(),
+        todo.getDueDate(),
+        todo.getPriority(),
+        todo.getLocation(),
+      );
+      user.addToProject(copyTodo, projectId);
+      closeDialog();
+    });
+
+    return form;
+  };
+
   return {
     formAddNewTodo,
     formAddNewProject,
     formExpandTodo,
     formDelete,
     formDiscard,
+    formRestore,
   };
 }

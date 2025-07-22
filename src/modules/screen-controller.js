@@ -217,7 +217,12 @@ export function screenController() {
       const todoObj = currentProject.getTodo(todoId);
 
       if (deleteBtn) {
-        dialogCont.dialogDelete(todoId, currentProjectId);
+        //delete button acts like restore
+        if(currentlyHistory){
+          dialogCont.dialogRestore(todoObj, todoObj.getLocation());
+        }else{
+          dialogCont.dialogDelete(todoId, currentProjectId);
+        }
         dialog.showModal();
         dialog.addEventListener("close", () => {
           updateProjectContent(currentProject);

@@ -24,10 +24,16 @@ export function dialogController() {
     clear(dialog);
     dialog.appendChild(createForm().formDelete(todoId, projectId));
   }
+  // format dialog for confirm restore alert
+  const dialogRestore = (todo, projectId) => {
+    clear(dialog);
+    dialog.appendChild(createForm().formRestore(todo, projectId));
+  }
   return {
     dialogAddNewTodo,
     dialogAddNewProject,
     dialogExpandTodo,
     dialogDelete,
+    dialogRestore,
   };
 }
