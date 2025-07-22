@@ -12,6 +12,7 @@ export function createProject(name = "ToDo List") {
   const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
 
   const getProjectName = () => name;
+  const updateProjectName = (newProjectName) => name = newProjectName;
   const getProjectContent = () => projectTodos;
   const addTodo = (newTodo) => projectTodos.push(newTodo);
   const getId = () => id;
@@ -39,5 +40,6 @@ export function createProject(name = "ToDo List") {
     getId,
     getTodo,
     addToHistory,
+    updateProjectName,
   };
 }
