@@ -17,6 +17,7 @@ export function createUser(name = "SCRUM MAISTER") {
   const newProject = (newProjectName) =>
     projects.push(createProject(newProjectName));
   const userName = () => name;
+  const newUserName = (newUserName) => name = newUserName;
   const newTodo = (title, description, dueDate, priority, location) =>
     createTodo({title, description, dueDate, priority, location});
   const newChecklistItem = (title) => createTodo({title});
@@ -66,5 +67,6 @@ export function createUser(name = "SCRUM MAISTER") {
     self,
     getHistory,
     addToHistory,   
+    newUserName,
   };
 }
