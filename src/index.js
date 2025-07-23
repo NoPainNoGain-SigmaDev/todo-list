@@ -62,8 +62,7 @@ user.addToProject(user.newTodo("Milk", "", "", "medium", id2), id2);
 user.addToProject(user.newTodo("Cereal", "", "", "low", id2), id2);
 user.addToProject(user.newTodo("Coffee", "", "", "high", id2), id2);
 user.addToProject(user.newTodo("Trash bags", "", "", "low", id2), id2);
-user.addToProject(user.newTodo("Soap", "", "", "medium", id2), id2);
-user.addToProject(user.newTodo("Eggs", "", "", "medium", id2), id2);
+
 
 // ---- Homework ----
 user.addToProject(user.newTodo("Write English essay", "Topic: Climate Change", "2025-07-22", "high", id3), id3);
