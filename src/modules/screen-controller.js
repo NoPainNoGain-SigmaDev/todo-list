@@ -10,6 +10,7 @@ export function screenController() {
   const addNewProject = document.getElementById("add-new-project");
   const history = document.getElementById("history");
   const dialog = document.getElementById("dialog");
+  const dialogSecondary = document.getElementById("dialog-level-2");
   const projectsNav = document.getElementById("nav-content");
   const content = document.getElementById("content");
   const username = document.getElementById("username");
@@ -86,10 +87,6 @@ export function screenController() {
     user.getProjects().forEach((project) => {
       projectsNav.appendChild(createProjectElement(project));
     });
-    if(!currentSelectedProject){
-      currentSelectedProject = projectsNav.querySelector(":scope > .project");
-      clickProject();
-    }
   };
 
   const createTodoElement = (todo) => {
@@ -156,7 +153,9 @@ export function screenController() {
           createEl("i", { className: "fa-regular fa-folder" }),
           createEl("p", {
             className: "location-title",
-            textContent: user.getProject(todo.getLocation())? user.getProject(todo.getLocation()).getProjectName() : "Deleted",
+            textContent: user.getProject(todo.getLocation())
+              ? user.getProject(todo.getLocation()).getProjectName()
+              : "Deleted",
           }),
         ])
       );
@@ -232,13 +231,15 @@ export function screenController() {
         //delete button acts like restore
         if (currentlyHistory) {
           dialogCont.dialogRestore(todoObj, todoObj.getLocation());
+          dialogSecondary.showModal();
         } else {
           dialogCont.dialogDelete(todoId, currentProjectId);
+          dialog.showModal();
+          dialog.addEventListener("close", () => {
+            updateProjectContent(currentProject);
+          });
         }
-        dialog.showModal();
-        dialog.addEventListener("close", () => {
-          updateProjectContent(currentProject);
-        });
+
         return;
       }
 
@@ -312,8 +313,14 @@ export function screenController() {
       dialogCont.dialogDeleteProject(clickedProject.id);
       dialog.showModal();
       dialog.addEventListener("close", () => {
-        currentSelectedProject = null;
-        updateProjectNav();
+        console.log(dialog.returnValue);
+        if (dialog.returnValue === "cancel") {
+        } else {
+          updateProjectNav();
+          currentSelectedProject =
+            projectsNav.querySelector(":scope > .project");
+          clickProject();
+        }
       });
     } else {
       if (!clickedProject) return;

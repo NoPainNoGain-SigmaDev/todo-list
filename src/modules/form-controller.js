@@ -473,6 +473,7 @@ export function createForm() {
   };
 
   const formRestore = (todo) => {
+    const dialogSecondary = document.getElementById("dialog-level-2");
     const warningIcon = createEl("i", {
       className: "fa-regular fa-circle-check",
     });
@@ -504,8 +505,9 @@ export function createForm() {
       formActions,
     ]);
 
-    closeBtn.addEventListener("click", () => {
-      closeDialog();
+    closeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      dialogSecondary.close();
       return;
     });
 
@@ -519,7 +521,7 @@ export function createForm() {
         user.getProject(todo.getLocation())? todo.getLocation() : user.getProjects()[0].getId(),
       );
       user.addToProject(copyTodo, copyTodo.getLocation());
-      closeDialog();
+      dialogSecondary.close();
     });
 
     return form;
@@ -532,7 +534,7 @@ export function createForm() {
     const header = createEl("h1", { textContent: "Delete project?" });
     const subheader = createEl("h2", {
       textContent:
-        "Are you sure you want to delete this entire project? This action is permanent and cannot be undone.",
+        "Are you sure you want to delete this entire project?",
     });
     const closeBtn = createEl("button", {
       type: "button",
@@ -559,7 +561,7 @@ export function createForm() {
     ]);
 
     closeBtn.addEventListener("click", () => {
-      closeDialog();
+      dialog.close("cancel");
       return;
     });
 
@@ -572,7 +574,7 @@ export function createForm() {
         user.deleteProject(projectId);
       }
 
-      closeDialog();
+      dialog.close("");
     });
 
     return form;

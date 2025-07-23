@@ -3,6 +3,7 @@ import { clear } from "./dom-tools";
 
 export function dialogController() {
   const dialog = document.getElementById("dialog");
+  const dialogSecondary = document.getElementById("dialog-level-2");
   
   // format dialog for new todos
   const dialogAddNewTodo = () => {
@@ -26,8 +27,8 @@ export function dialogController() {
   }
   // format dialog for confirm restore alert
   const dialogRestore = (todo, projectId) => {
-    clear(dialog);
-    dialog.appendChild(createForm().formRestore(todo, projectId));
+    clear(dialogSecondary);
+    dialogSecondary.appendChild(createForm().formRestore(todo, projectId));
   }
   // format dialog for confirm delete project alert
   const dialogDeleteProject = (projectId) => {
