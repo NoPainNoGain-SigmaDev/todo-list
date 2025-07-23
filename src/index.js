@@ -76,4 +76,8 @@ user.addToProject(user.newTodo("Organize backpack", "", "", "low", id3), id3);
 user.addToProject(user.newTodo("Check grades online", "", "", "low", id3), id3);
 
 
+user.getProjects()[0].getProjectContent()[0].addSubTodo(user.newTodo("Buy groceries", "Milk, eggs, chicken, rice", "2025-07-20", "medium"));
+
+user.self();
+
 screenController();
