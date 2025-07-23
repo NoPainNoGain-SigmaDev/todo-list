@@ -91,6 +91,7 @@ export function screenController() {
 
   const createTodoElement = (todo) => {
     let disableToggleCompleted = false;
+    const elements = [];
     if (currentlyHistory) disableToggleCompleted = true;
     const priorityBtn = createEl(
       "button",
@@ -119,19 +120,22 @@ export function screenController() {
       title,
       trashBtn,
     ]);
+    elements.push(topRow);
 
-    const elements = [topRow];
+    const middleRowContent = [];
 
     if (todo.getDescription().trim()) {
-      elements.push(
-        createEl("div", { className: "level-2-info" }, [
-          createEl("p", {
-            className: "description",
-            textContent: todo.getDescription(),
-          }),
-        ])
+      middleRowContent.push(
+        createEl("p", {
+          className: "description",
+          textContent: todo.getDescription(),
+        })
       );
     }
+
+    const middleRow = createEl("div", { className: "level-2-info" }, middleRowContent);
+
+    if(middleRowContent.length > 0)elements.push(middleRow);
 
     const bottomRowContent = [];
 
