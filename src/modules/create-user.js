@@ -17,17 +17,19 @@ export function createUser(name = "SCRUM MAISTER") {
   const newProject = (newProjectName) =>
     projects.push(createProject(newProjectName));
   const userName = () => name;
-  const newUserName = (newUserName) => name = newUserName;
+  const newUserName = (newUserName) => (name = newUserName);
   const newTodo = (title, description, dueDate, priority, location) =>
-    createTodo({title, description, dueDate, priority, location});
-  const newChecklistItem = (title) => createTodo({title});
+    createTodo({ title, description, dueDate, priority, location });
+  const newChecklistItem = (title) => createTodo({ title });
   const addToProject = (toDo, projectId = getProjects()[0].getId()) => {
     const targetProject = getProject(projectId);
     targetProject.addTodo(toDo);
   };
   const deleteFromProject = (todoId, projectId) => {
     const targetProject = getProject(projectId);
-    const targetTodo = targetProject.getProjectContent().find(todo => todo.getId() === todoId);
+    const targetTodo = targetProject
+      .getProjectContent()
+      .find((todo) => todo.getId() === todoId);
     targetProject.removeTodo(targetTodo.getId());
   };
   const deleteProject = (projectId) => {
@@ -35,25 +37,55 @@ export function createUser(name = "SCRUM MAISTER") {
       (project) => project.getId() === projectId
     );
     projects.splice(targetProject, 1);
-  }
+  };
+  //history
   const getHistory = () => history;
   const addToHistory = (todo) => history.addToHistory(todo);
+  //subTodos
+  const addSubTodo = (subTodo, todoId, projectId) => {
+    getProject(projectId).getTodo(todoId).addSubTodo(subTodo);
+  };
+  const deleteSubTodo = (subTodoId, todoId, projectId) => {
+    getProject(projectId).getTodo(todoId).removeSubTodo(subTodoId);
+  };
+  //logger
+  const self = () => {
+    const projectsData = getProjects().map((project) => ({
+      name: project.getProjectName(),
+      id: project.getId(),
+      content: project.getProjectContent().map((todo) => ({
+        title: todo.getTitle(),
+        id: todo.getId(),
+        description: todo.getDescription(),
+        dueDate: todo.getDueDate(),
+        priority: todo.getPriority(),
+        completed: todo.isCompleted(),
+        location: todo.getLocation(),
+        subTodos: todo.getSubTodos().map((subTodo) => ({
+          title: subTodo.getTitle(),
+          id: subTodo.getId(),
+          description: subTodo.getDescription(),
+          dueDate: subTodo.getDueDate(),
+          priority: subTodo.getPriority(),
+          completed: subTodo.isCompleted(),
+          location: subTodo.getLocation(),
+        })),
+      })),
+    }));
 
-  const self = () =>{
-    console.log("PROJECTS----------------------------------------------------");
-    getProjects().forEach(project => {
-        console.log(project.getProjectName() + " ID: " + project.getId());
-        console.log("CONTENT:");
-        project.getProjectContent().forEach(todo => {
-            console.log(todo.getTitle(), todo.getId(), todo.getDescription(), todo.getDueDate(), todo.getPriority(), " COMPLETED: " + todo.isCompleted());
-            todo.getChecklist().forEach(checklistItem => console.log(checklistItem.getTitle(), checklistItem.isCompleted()));
-        })
-    });
-    console.log("HISTORY----------------------------------------------------");
-    history.getProjectContent().forEach(completedTodo => {
-      console.log("TITLE: " + completedTodo.getTitle() + " LOCATION: " + completedTodo.getLocation() + " ID: " + completedTodo.getId());
-    });
-  }
+    const historyData = history.getProjectContent().map((completedTodo) => ({
+      title: completedTodo.getTitle(),
+      location: completedTodo.getLocation(),
+      id: completedTodo.getId(),
+    }));
+
+    const userData = {
+      projects: projectsData,
+      history: historyData,
+    };
+
+    console.log(JSON.stringify(userData, null, 2));
+  };
   return {
     getProjects,
     getProject,
@@ -66,7 +98,9 @@ export function createUser(name = "SCRUM MAISTER") {
     deleteProject,
     self,
     getHistory,
-    addToHistory,   
+    addToHistory,
     newUserName,
+    addSubTodo,
+    deleteSubTodo,
   };
 }

@@ -6,6 +6,7 @@ export function createTodo({
   location = "",
 }) {
   let completed = false;
+  let subTodos = []; // array of todos 
 
   //crypto.randomUUID() does not work on iphone
   function generateUUID() {
@@ -17,17 +18,11 @@ export function createTodo({
     );
   }
   const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
-  const checklist = [];
 
   const getTitle = () => title;
   const updateTitle = (newTitle) => (title = newTitle);
   const getDescription = () => description;
   const updateDescription = (newDescription) => (description = newDescription);
-  const getChecklist = () => checklist;
-  const addToChecklist = (newChecklistItem) => checklist.push(newChecklistItem);
-  const removeChecklistItem = (index) => {
-    checklist.splice(index, 1);
-  };
   const getDueDate = () => dueDate;
   const updateDueDate = (newDate) => (dueDate = newDate);
   const getPriority = () => priority;
@@ -37,15 +32,27 @@ export function createTodo({
   const updateStatus = () => (completed = !isCompleted());
   const getLocation = () => location;
   const updateLocation = (newLocation) => (location = newLocation);
+  //subtodo logic
+  const addSubTodo = (subTodo) => subTodos.push(subTodo);
+  const getSubTodos = () => subTodos;
+  const getSubTodo = (subTodoId) => {
+    const targetSubTodo = subTodos.find(
+      (subTodo) => subTodo.getId() === subTodoId
+    );
+    return targetSubTodo;
+  }
+  const removeSubTodo = (subTodoId) => {
+    const targetSubTodo = subTodos.findIndex(
+      (subTodo) => subTodo.getId() === subTodoId
+    );
+    subTodos.splice(targetSubTodo, 1);
+  }
 
   return {
     getTitle,
     updateTitle,
     getDescription,
     updateDescription,
-    getChecklist,
-    addToChecklist,
-    removeChecklistItem,
     getDueDate,
     updateDueDate,
     getPriority,
@@ -55,5 +62,9 @@ export function createTodo({
     updateStatus,
     getLocation,
     updateLocation,
+    addSubTodo,
+    getSubTodos,
+    removeSubTodo,
+    getSubTodo,
   };
 }

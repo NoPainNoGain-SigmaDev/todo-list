@@ -227,6 +227,7 @@ export function screenController() {
       const currentProjectId = currentProject.getId();
       const todoObj = currentProject.getTodo(todoId);
 
+      //delete or restore
       if (deleteBtn) {
         //delete button acts like restore
         if (currentlyHistory) {
@@ -242,14 +243,14 @@ export function screenController() {
 
         return;
       }
-
+      //mark as completed
       if (toggleBtn) {
         user.addToHistory(todoObj);
         user.deleteFromProject(todoId, currentProjectId);
         updateProjectContent(currentProject);
         return;
       }
-
+      //expand
       if (todoContainer) {
         const todoId = todoContainer.dataset.id;
         let todo = "";
