@@ -36,7 +36,8 @@
 }
 
 .level-2-info,
-.level-3-info {
+.level-3-info,
+.sub-todo-container {
   margin-left: 3rem;
 }
 .level-2-info{
