@@ -155,6 +155,19 @@ export function screenController() {
       );
     }
 
+    if(todo.getSubTodos().length > 1){
+      bottomRowContent.push(
+        createEl(
+          "div",
+          { className : "sub-todos-counter"},
+          [
+            createEl("i", {className : "fa-regular fa-square-plus"}),
+            createEl("p", {className : "sub-todos-counter-text" , textContent : todo.getSubTodos().length}),
+          ]
+        )
+      );
+    }
+
     if (currentlyHistory) {
       bottomRowContent.push(
         createEl("div", { className: "location" }, [
