@@ -90,7 +90,7 @@
   left: 50%;
   transform: translate(-50%, 0%);
 }
-.todo-container:hover > .level-1-info > .delete {
+.todo-container > .level-1-info:hover > .delete {
   display: block;
 }
 
