@@ -133,6 +133,18 @@ export function screenController() {
       );
     }
 
+    if(todo.getSubTodos().length > 0){
+      const subTodos = todo.getSubTodos();
+      const subTodoElements = [];
+
+      subTodos.forEach(subTodo=>{
+        subTodoElements.push(createTodoElement(subTodo));
+      });
+
+      middleRowContent.push(createEl("div", {className : "sub-todo-container"}, subTodoElements));
+    }
+
+
     const middleRow = createEl("div", { className: "level-2-info" }, middleRowContent);
 
     if(middleRowContent.length > 0)elements.push(middleRow);
