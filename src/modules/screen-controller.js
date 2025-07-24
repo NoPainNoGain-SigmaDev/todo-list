@@ -133,21 +133,13 @@ export function screenController() {
       );
     }
 
-    if(todo.getSubTodos().length > 0){
-      const subTodos = todo.getSubTodos();
-      const subTodoElements = [];
+    const middleRow = createEl(
+      "div",
+      { className: "level-2-info" },
+      middleRowContent
+    );
 
-      subTodos.forEach(subTodo=>{
-        subTodoElements.push(createTodoElement(subTodo));
-      });
-
-      middleRowContent.push(createEl("div", {className : "sub-todo-container"}, subTodoElements));
-    }
-
-
-    const middleRow = createEl("div", { className: "level-2-info" }, middleRowContent);
-
-    if(middleRowContent.length > 0)elements.push(middleRow);
+    if (middleRowContent.length > 0) elements.push(middleRow);
 
     const bottomRowContent = [];
 
@@ -184,6 +176,24 @@ export function screenController() {
     );
 
     if (bottomRowContent.length) elements.push(bottomRow);
+
+    let subTodosContainer = null;
+
+    if (todo.getSubTodos().length > 0) {
+      const subTodos = todo.getSubTodos();
+      const subTodoElements = [];
+
+      subTodos.forEach((subTodo) => {
+        subTodoElements.push(createTodoElement(subTodo));
+      });
+
+      subTodosContainer = createEl(
+        "div",
+        { className: "sub-todo-container" },
+        subTodoElements
+      );
+      elements.push(subTodosContainer);
+    }
 
     const container = createEl(
       "div",
