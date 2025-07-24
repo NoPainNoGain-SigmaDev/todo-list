@@ -143,17 +143,6 @@ export function screenController() {
 
     const bottomRowContent = [];
 
-    if (todo.getDueDate().trim()) {
-      bottomRowContent.push(
-        createEl("div", { className: "date-container" }, [
-          createEl("i", { className: "fa-regular fa-calendar-minus" }),
-          createEl("p", {
-            className: "date",
-            textContent: todo.getDueDate(),
-          }),
-        ])
-      );
-    }
 
     if(todo.getSubTodos().length > 1){
       bottomRowContent.push(
@@ -165,6 +154,18 @@ export function screenController() {
             createEl("p", {className : "sub-todos-counter-text" , textContent : todo.getSubTodos().length}),
           ]
         )
+      );
+    }
+
+    if (todo.getDueDate().trim()) {
+      bottomRowContent.push(
+        createEl("div", { className: "date-container" }, [
+          createEl("i", { className: "fa-regular fa-calendar-minus" }),
+          createEl("p", {
+            className: "date",
+            textContent: todo.getDueDate(),
+          }),
+        ])
       );
     }
 
