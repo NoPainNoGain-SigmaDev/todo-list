@@ -4,7 +4,7 @@ import { createTodo } from "./create-todo";
 export function createUser(name = "SCRUM MAISTER") {
   const projects = []; //collection of projects
   const history = createProject("History"); //collection al completed todos
-  const defaultProject = createProject("Things ToDo");
+  const defaultProject = createProject("Things ToDo 📋");
   projects.push(defaultProject);
 
   const getProjects = () => projects;
