@@ -52,13 +52,13 @@
   align-items: center;
   gap: 1rem;
 }
-.location{
+.location, .sub-todos-counter{
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
 }
-.location-title{
+.location-title, .sub-todos-counter-text, .sub-todos-counter i{
   font-size: var(--font-size-small);
   color: var(--color-text-secondary); 
 }
