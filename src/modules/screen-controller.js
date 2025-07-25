@@ -1,6 +1,6 @@
 import { dialogController } from "./dialog-controller";
 import { createEl, clear, autoResize } from "./dom-tools";
-import { user } from "../index.js";
+import { user } from "../index.js"; // Ensure user has getCurrentProjectId and updateCurrentProjectId
 
 export function screenController() {
   const dialogCont = dialogController();
@@ -15,46 +15,52 @@ export function screenController() {
   const content = document.getElementById("content");
   const username = document.getElementById("username");
 
-  let currentSelectedProject = null;
-  let currentlyHistory = false;
-  let pastWasHistory = false;
+  // State management (now primarily relies on user.currentProjectId)
+  let currentlyHistory = false; // Still useful for history specific logic
 
   // ----------- Helper Functions -----------
 
-  const getCurrentProject = () => {
+  // Gets the current project object (either a Project or the History object)
+  const getCurrentProjectObject = () => {
     if (currentlyHistory) {
       return user.getHistory();
     } else {
-      const id = currentSelectedProject?.id;
+      const id = user.getCurrentProjectId();
       return user.getProject(id);
     }
   };
 
-  const clickProject = () => {
-    const project = projectsNav.querySelector(
-      `[data-id="${currentSelectedProject?.dataset.id}"]`
-    );
-    project.click();
-  };
-  const setCurrentProject = (element) => {
-    if (currentSelectedProject) {
-      currentSelectedProject.classList.remove("selected-project");
-      if (pastWasHistory) {
-        currentlyHistory = false;
-      } else {
-        const icon = currentSelectedProject.querySelector(".project-info i");
-        icon.classList.replace("fa-folder-open", "fa-folder-closed");
-      }
+  // Helper to get the DOM element of the currently selected project
+  const getCurrentProjectElement = () => {
+    const currentId = user.getCurrentProjectId();
+    if (currentId === user.getHistory().getId()) { // Check if history is the current "project"
+      return history;
     }
-    currentSelectedProject = element;
-    currentSelectedProject.classList.add("selected-project");
+    return document.getElementById(currentId);
+  };
 
-    if (currentlyHistory) {
-      pastWasHistory = true;
-    } else {
-      pastWasHistory = false;
-      const icon = currentSelectedProject.querySelector(".project-info i");
-      icon.classList.replace("fa-folder-closed", "fa-folder-open");
+  // Updates the visual "selected" state and folder icon for projects
+  const setCurrentProjectDisplay = () => {
+    // Remove 'selected-project' from all projects and close their folders
+    projectsNav.querySelectorAll(".project").forEach(projEl => {
+      projEl.classList.remove("selected-project");
+      const icon = projEl.querySelector(".project-info i");
+      if (icon) icon.classList.replace("fa-folder-open", "fa-folder-closed");
+    });
+
+    // Remove 'selected-project' from history (if it was selected)
+    history.classList.remove("selected-project");
+
+
+    // Apply 'selected-project' to the new current project element
+    const newSelectedElement = getCurrentProjectElement();
+    if (newSelectedElement) {
+      newSelectedElement.classList.add("selected-project");
+      // If it's a regular project (not history), open its folder icon
+      if (newSelectedElement !== history) {
+        const icon = newSelectedElement.querySelector(".project-info i");
+        if (icon) icon.classList.replace("fa-folder-closed", "fa-folder-open");
+      }
     }
   };
 
@@ -78,7 +84,6 @@ export function screenController() {
       [info, tools]
     );
 
-    container.dataset.id = project.getId();
     return container;
   };
 
@@ -87,10 +92,12 @@ export function screenController() {
     user.getProjects().forEach((project) => {
       projectsNav.appendChild(createProjectElement(project));
     });
+    setCurrentProjectDisplay(); // Update display after re-rendering nav
   };
 
   const createTodoElement = (todo) => {
     let disableToggleCompleted = false;
+    const subTodosLength = todo.getSubTodos().length;
     const elements = [];
     if (currentlyHistory) disableToggleCompleted = true;
     const priorityBtn = createEl(
@@ -151,7 +158,7 @@ export function screenController() {
           { className : "sub-todos-counter"},
           [
             createEl("i", {className : "fa-regular fa-square-plus"}),
-            createEl("p", {className : "sub-todos-counter-text" , textContent : todo.getSubTodos().length}),
+            createEl("p", {className : "sub-todos-counter-text" , textContent : subTodosLength}),
           ]
         )
       );
@@ -193,7 +200,7 @@ export function screenController() {
 
     let subTodosContainer = null;
 
-    if (todo.getSubTodos().length > 0) {
+    if (subTodosLength > 0) {
       const subTodos = todo.getSubTodos();
       const subTodoElements = [];
 
@@ -213,11 +220,11 @@ export function screenController() {
       "div",
       {
         className: "todo-container",
+        id : todo.getId(),
       },
       elements
     );
 
-    container.dataset.id = todo.getId();
     return container;
   };
 
@@ -231,9 +238,8 @@ export function screenController() {
     projectTitle.addEventListener("change", () => {
       if (projectTitle.value !== project.getProjectName()) {
         project.updateProjectName(projectTitle.value);
-        updateProjectNav();
-        const selector = `${project.getId()}`;
-        setCurrentProject(document.getElementById(selector));
+        updateProjectNav(); // Re-render nav to show new name
+        // The display will be updated by setCurrentProjectDisplay after updateProjectNav
       }
     });
 
@@ -261,11 +267,13 @@ export function screenController() {
       const toggleBtn = e.target.closest(".toggle-completed");
       const deleteBtn = e.target.closest(".delete");
       const todoContainer = e.target.closest(".todo-container");
-      if (!(todoContainer && todoContainer.dataset)) return;
-      const todoId = todoContainer.dataset.id;
-      const currentProject = getCurrentProject();
-      const currentProjectId = currentProject.getId();
-      const todoObj = currentProject.getTodo(todoId);
+      if (!(todoContainer && todoContainer.id)) return;
+      const todoId = todoContainer.id;
+      const currentProjectObject = getCurrentProjectObject(); // Get the current project object
+      const currentProjectId = currentProjectObject.getId();
+      
+      let todoObj = currentProjectObject.getTodo(todoId); // Try to get direct todo or sub-todo from current project
+
 
       //delete or restore
       if (deleteBtn) {
@@ -277,41 +285,26 @@ export function screenController() {
           dialogCont.dialogDelete(todoId, currentProjectId);
           dialog.showModal();
           dialog.addEventListener("close", () => {
-            updateProjectContent(currentProject);
+            updateProjectContent(currentProjectObject);
           });
         }
-
         return;
       }
       //mark as completed
       if (toggleBtn) {
         user.addToHistory(todoObj);
         user.deleteFromProject(todoId, currentProjectId);
-        updateProjectContent(currentProject);
+        updateProjectContent(currentProjectObject);
         return;
       }
       //expand
       if (todoContainer) {
-        const todoId = todoContainer.dataset.id;
-        let todo = "";
-        if (currentlyHistory) {
-          todo = user.getHistory().getTodo(todoId);
-          dialogCont.dialogExpandTodo(todo);
-          const form = document.getElementById("form");
-          [...form.elements].forEach((el) => {
-            if (el.id === "dialog-close") {
-            } else {
-              el.disabled = true;
-            }
-          });
-        } else {
-          todo = getCurrentProject().getTodo(todoId);
-          dialogCont.dialogExpandTodo(todo);
-        }
+        dialogCont.dialogExpandTodo(todoObj); // Use the already found todoObj
         dialog.showModal();
+        //adjusts the size of the description for stetic purposes
         autoResize(dialog.querySelector("#description"));
         dialog.addEventListener("close", () => {
-          updateProjectContent(getCurrentProject());
+          updateProjectContent(getCurrentProjectObject());
         });
       }
     });
@@ -327,7 +320,9 @@ export function screenController() {
       "close",
       () => {
         updateProjectNav();
-        clickProject();
+        user.updateCurrentProjectId(user.getProjects()[user.getProjects().length - 1].getId()); // Select the newly added project
+        setCurrentProjectDisplay();
+        updateProjectContent(getCurrentProjectObject());
       },
       { once: true }
     );
@@ -340,7 +335,7 @@ export function screenController() {
     dialog.addEventListener(
       "submit",
       () => {
-        updateProjectContent(getCurrentProject());
+        updateProjectContent(getCurrentProjectObject());
       },
       { once: true }
     );
@@ -348,48 +343,58 @@ export function screenController() {
 
   projectsNav.addEventListener("click", (e) => {
     const deleteBtn = e.target.closest(".project-delete");
-    const clickedProject = e.target.closest(".project");
+    const clickedProject = e.target.closest(".project"); // This is the DOM element
 
     if (deleteBtn) {
       dialogCont.dialogDeleteProject(clickedProject.id);
       dialog.showModal();
       dialog.addEventListener("close", () => {
-        console.log(dialog.returnValue);
         if (dialog.returnValue === "cancel") {
+          // Do nothing or re-select previous project if it was deleted
         } else {
-          updateProjectNav();
-          currentSelectedProject =
-            projectsNav.querySelector(":scope > .project");
-          clickProject();
+          updateProjectNav(); // Re-render nav first
+          // After deletion, select the first project if the current one was deleted
+          if (user.getCurrentProjectId() === clickedProject.id) {
+            user.updateCurrentProjectId(user.getProjects()[0].getId());
+          }
+          setCurrentProjectDisplay(); // Update visual selection
+          updateProjectContent(getCurrentProjectObject()); // Load content for the newly selected project
         }
       });
     } else {
       if (!clickedProject) return;
-      setCurrentProject(clickedProject);
-      updateProjectContent(getCurrentProject());
+      currentlyHistory = false; // Ensure history mode is off
+
+      // Update the central state
+      user.updateCurrentProjectId(clickedProject.id);
+      // Update the display based on the central state
+      setCurrentProjectDisplay();
+      // Load the content for the selected project
+      updateProjectContent(getCurrentProjectObject());
     }
   });
 
   history.addEventListener("click", () => {
-    currentlyHistory = true;
-    const clickedProject = history;
-    if (!clickedProject) return;
-
-    setCurrentProject(clickedProject);
-    updateProjectContent(user.getHistory());
+    currentlyHistory = true; // Enter history mode
+    user.updateCurrentProjectId(user.getHistory().getId()); // Set history ID as current in user model
+    setCurrentProjectDisplay(); // Update visual selection to history
+    updateProjectContent(user.getHistory()); // Load history content
   });
 
   username.addEventListener("change", () => {
     if (username.value !== user.userName()) {
       user.newUserName(username.value);
-    } else {
     }
   });
 
   // ----------- App Load -----------
+  // Initialize current project based on user's model
+  // If no project is currently selected in user model, select the first one
+  if (!user.getCurrentProjectId()) {
+    user.updateCurrentProjectId(user.getProjects()[0].getId());
+  }
 
-  updateProjectNav();
-  currentSelectedProject = projectsNav.querySelector(":scope > .project");
-  clickProject();
-  history.dataset.id = user.getHistory().getId();
+  updateProjectNav(); // Render project navigation initially
+  setCurrentProjectDisplay(); // Set the visual selection based on currentProjectId
+  updateProjectContent(getCurrentProjectObject()); // Load content for the initial selected project
 }
