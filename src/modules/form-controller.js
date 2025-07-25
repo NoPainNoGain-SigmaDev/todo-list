@@ -208,7 +208,7 @@ export function createForm() {
     });
     //set first option to the current project
     const indexCurrentProject = projects.findIndex(
-      (project) => project.dataset.id === location
+      (project) => project.dataset.id === user.getCurrentProjectId()
     );
     const currentProject = projects[indexCurrentProject];
     projects.splice(indexCurrentProject, 1);
