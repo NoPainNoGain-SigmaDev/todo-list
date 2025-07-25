@@ -6,7 +6,7 @@ export function createTodo({
   location = "",
 }) {
   let completed = false;
-  let subTodos = []; // array of todos 
+  let subTodos = []; // array of todos
 
   //crypto.randomUUID() does not work on iphone
   function generateUUID() {
@@ -36,17 +36,25 @@ export function createTodo({
   const addSubTodo = (subTodo) => subTodos.push(subTodo);
   const getSubTodos = () => subTodos;
   const getSubTodo = (subTodoId) => {
-    const targetSubTodo = subTodos.find(
-      (subTodo) => subTodo.getId() === subTodoId
-    );
-    return targetSubTodo;
-  }
+    for (const subTodo of subTodos) {
+      if (subTodo.getId() === subTodoId) {
+        return subTodo;
+      }
+
+      const foundInNested = subTodo.getSubTodo(subTodoId);
+      if (foundInNested) {
+        return foundInNested;
+      }
+    }
+
+    return null;
+  };
   const removeSubTodo = (subTodoId) => {
     const targetSubTodo = subTodos.findIndex(
       (subTodo) => subTodo.getId() === subTodoId
     );
     subTodos.splice(targetSubTodo, 1);
-  }
+  };
 
   return {
     getTitle,

@@ -12,7 +12,7 @@ export function createProject(name = "ToDo List") {
   const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
 
   const getProjectName = () => name;
-  const updateProjectName = (newProjectName) => name = newProjectName;
+  const updateProjectName = (newProjectName) => (name = newProjectName);
   const getProjectContent = () => projectTodos;
   const addTodo = (newTodo) => projectTodos.push(newTodo);
   const getId = () => id;
@@ -23,14 +23,15 @@ export function createProject(name = "ToDo List") {
     projectTodos.splice(targetTodo, 1);
   };
   const getTodo = (todoId) => {
-    const targetTodo = projectTodos.find(
-      (todo) => todo.getId() === todoId
-    );
-    return targetTodo;
-  }
+    for (const todo of projectTodos) {
+      if (todo.getId() === todoId) return todo;
+      const possibleSubTodo = todo.getSubTodo(todoId);
+      if (possibleSubTodo) return possibleSubTodo;
+    }
+  };
   const addToHistory = (newTodo) => {
     projectTodos.unshift(newTodo);
-  }
+  };
 
   return {
     getProjectName,

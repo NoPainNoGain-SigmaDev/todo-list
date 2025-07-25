@@ -6,6 +6,7 @@ export function createUser(name = "SCRUM MAISTER") {
   const history = createProject("History"); //collection al completed todos
   const defaultProject = createProject("Things ToDo 📋");
   projects.push(defaultProject);
+  let currentProjectId = projects[0].getId();
 
   const getProjects = () => projects;
   const getProject = (projectId) => {
@@ -48,29 +49,38 @@ export function createUser(name = "SCRUM MAISTER") {
   const deleteSubTodo = (subTodoId, todoId, projectId) => {
     getProject(projectId).getTodo(todoId).removeSubTodo(subTodoId);
   };
+  const getCurrentProjectId = () => currentProjectId;
+  const updateCurrentProjectId = (newCurrentProjectId) =>
+    (currentProjectId = newCurrentProjectId);
   //logger
   const self = () => {
+    // Recursive helper function to map todos and their nested sub-todos
+    const mapTodosRecursively = (todos) => {
+      return todos.map((todo) => {
+        const todoObject = {
+          title: todo.getTitle(),
+          id: todo.getId(),
+          description: todo.getDescription(),
+          dueDate: todo.getDueDate(),
+          priority: todo.getPriority(),
+          completed: todo.isCompleted(),
+          location: todo.getLocation(),
+        };
+
+        // If there are sub-todos, recursively map them
+        const subTodos = todo.getSubTodos();
+        if (subTodos && subTodos.length > 0) {
+          todoObject.subTodos = mapTodosRecursively(subTodos); // Recursive call
+        }
+
+        return todoObject;
+      });
+    };
+
     const projectsData = getProjects().map((project) => ({
       name: project.getProjectName(),
       id: project.getId(),
-      content: project.getProjectContent().map((todo) => ({
-        title: todo.getTitle(),
-        id: todo.getId(),
-        description: todo.getDescription(),
-        dueDate: todo.getDueDate(),
-        priority: todo.getPriority(),
-        completed: todo.isCompleted(),
-        location: todo.getLocation(),
-        subTodos: todo.getSubTodos().map((subTodo) => ({
-          title: subTodo.getTitle(),
-          id: subTodo.getId(),
-          description: subTodo.getDescription(),
-          dueDate: subTodo.getDueDate(),
-          priority: subTodo.getPriority(),
-          completed: subTodo.isCompleted(),
-          location: subTodo.getLocation(),
-        })),
-      })),
+      content: mapTodosRecursively(project.getProjectContent()), // Use the recursive helper here
     }));
 
     const historyData = history.getProjectContent().map((completedTodo) => ({
@@ -102,5 +112,7 @@ export function createUser(name = "SCRUM MAISTER") {
     newUserName,
     addSubTodo,
     deleteSubTodo,
+    getCurrentProjectId,
+    updateCurrentProjectId,
   };
 }
