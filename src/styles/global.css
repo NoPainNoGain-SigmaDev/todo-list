@@ -105,3 +105,8 @@ button,
 .scroll-container::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0.5);
 }
+
+#dialog{
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}

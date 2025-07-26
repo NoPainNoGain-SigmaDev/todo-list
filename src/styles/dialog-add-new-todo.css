@@ -1,146 +1,153 @@
-#dialog, #dialog-level-2{
-    top: 13%;
-    left: 50%;
-    transform: translate(-50%, 0%);
+#dialog,
+#dialog-level-2 {
+  top: 13%;
+  left: 50%;
+  transform: translate(-50%, 0%);
 
-    min-width: 436px;
-    width: auto;
-    max-width: 580px;
+  min-width: 436px;
+  width: auto;
+  max-width: 580px;
 
-    max-height: 80vh;
+  max-height: 80vh;
 
-    border: none;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
+  border: none;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+
+  position: relative;
 }
 
-#form{
-    width: 100%;
-    border: none;
-    padding: 1.5rem;
+#form {
+  width: 100%;
+  border: none;
+  padding: 1.5rem;
+  position: relative;
 }
-fieldset{
-    border: none;
+fieldset {
+  border: none;
 }
-#title{
-    border: none;
-    width: 100%;
-    font-size: 2.3rem;
-    font-weight: 700;
-}
-
-#description{
-    width: 100%;
-    resize: none;
-    min-height: 25px;
-    /* max-height: 100px; */
-    border: none;
-    font-size: 1.5rem;
-    font-family: "Roboto";
-    font-weight: 400;
+#title {
+  border: none;
+  width: 100%;
+  font-size: 2.3rem;
+  font-weight: 700;
 }
 
-form *:focus{
-    outline: none;
+#description {
+  width: 100%;
+  resize: none;
+  min-height: 25px;
+  /* max-height: 100px; */
+  border: none;
+  font-size: 1.5rem;
+  font-family: "Roboto";
+  font-weight: 400;
 }
 
-input[type="date"]{
-    height: 2.8rem;
-    border: 1px solid var(--color-subtle);
-    font-family: "Roboto";
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    padding: 1rem;
-    border-radius: 4px;
+form *:focus {
+  outline: none;
 }
 
-.priority-select{
-    height: 2.8rem;
-    border: 1px solid var(--color-subtle);
-    font-family: "Roboto";
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    background-color: transparent;
-    border-radius: 4px;
-    margin-left: 1rem;
-        padding-left: 0.6rem;
-
+input[type="date"] {
+  height: 2.8rem;
+  border: 1px solid var(--color-subtle);
+  font-family: "Roboto";
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: 1rem;
+  border-radius: 4px;
 }
-.select-priority-low{
-color: var(--color-priority-low-border);
+
+.priority-select {
+  height: 2.8rem;
+  border: 1px solid var(--color-subtle);
+  font-family: "Roboto";
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 4px;
+  margin-left: 1rem;
+  padding-left: 0.6rem;
+}
+.select-priority-low {
+  color: var(--color-priority-low-border);
 }
 .select-priority-medium {
-  
   color: var(--color-priority-medium-border);
 }
 .select-priority-high {
   color: var(--color-priority-high-border);
 }
 
-option:hover{
-    background-color: #EEEEEE;
+option:hover {
+  background-color: #eeeeee;
 }
 
-input[type="date"]:hover, .project-select:hover, .priority-select:hover{
-    background-color: #EEEEEE;
+input[type="date"]:hover,
+.project-select:hover,
+.priority-select:hover {
+  background-color: #eeeeee;
 }
 
-.form-bottom{
-    border-top: 1px solid var(--color-priority-low-border);
-    padding-top: 2rem;
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
+.form-bottom {
+  border-top: 1px solid var(--color-priority-low-border);
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
 }
-.form-top{
-    padding-bottom: 2rem;
+.form-top {
+  padding-bottom: 2rem;
 }
-.project-select{
-    height: 2.8rem;
-    max-width: 140px;
-    border: 1px solid var(--color-subtle);
-    font-family: "Roboto";
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    background-color: transparent;
-    border-radius: 4px;
-    padding-left: 0.6rem;
-    text-overflow: ellipsis;
+.project-select {
+  height: 2.8rem;
+  max-width: 140px;
+  border: 1px solid var(--color-subtle);
+  font-family: "Roboto";
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  background-color: transparent;
+  border-radius: 4px;
+  padding-left: 0.6rem;
+  text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
-.project-select option{
-    max-width: 140px;
-    text-overflow: ellipsis;
+.project-select option {
+  max-width: 140px;
+  text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
-#dialog-close{
-    width: 80px;
-    height: 2.8rem;
-    border: none;
-    font-size: 1.6rem;
-    color: var(--color-text-secondary);
-    border-radius: 4px;
-    cursor: pointer;
+#dialog-close {
+  width: 80px;
+  height: 2.8rem;
+  border: none;
+  font-size: 1.6rem;
+  color: var(--color-text-secondary);
+  border-radius: 4px;
+  cursor: pointer;
 }
-#dialog-close:hover{
-    background-color: #E0E0E0;
-    color: #222;
+#dialog-close:hover {
+  background-color: #e0e0e0;
+  color: #222;
 }
-#form-add-todo{
-    width: 90px;
-    height: 2.8rem;
-    border: none;
-    background-color: #D1453B;
-    color: var(--color-primary);
-    border-radius: 4px;
-    font-size: 1.6rem;
-    cursor: pointer;
-    margin-left: 1rem;
+#form-add-todo {
+  width: 90px;
+  height: 2.8rem;
+  border: none;
+  background-color: #d1453b;
+  color: var(--color-primary);
+  border-radius: 4px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  margin-left: 1rem;
 }
-#form-add-todo:hover{
-    background-color: #B23A32;
+#form-add-todo:hover {
+  background-color: #b23a32;
 }
-
