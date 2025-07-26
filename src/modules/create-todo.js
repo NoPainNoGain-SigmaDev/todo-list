@@ -5,9 +5,9 @@ export function createTodo({
   priority = "low",
   location = "",
   parent = null,
+  subTodos = [],
 }) {
   let completed = false;
-  let subTodos = []; // array of todos
 
   //crypto.randomUUID() does not work on iphone
   function generateUUID() {
