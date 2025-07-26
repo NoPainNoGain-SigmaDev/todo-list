@@ -100,9 +100,7 @@ input[type="date"]:hover,
   left: 0;
   background-color: #fff;
 }
-.form-top {
-  padding-bottom: 2rem;
-}
+
 .project-select {
   height: 2.8rem;
   max-width: 140px;
