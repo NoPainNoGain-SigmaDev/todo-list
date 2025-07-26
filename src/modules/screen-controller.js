@@ -292,6 +292,7 @@ export function screenController() {
       }
       //mark as completed
       if (toggleBtn) {
+        if(currentlyHistory)return;
         user.addToHistory(todoObj);
         user.deleteTodo(todoId);
         updateProjectContent(currentProjectObject);
