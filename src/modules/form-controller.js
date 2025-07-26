@@ -273,10 +273,15 @@ export function createForm() {
       priorities
     );
 
-    const level2 = createEl("fieldset", { className: "form-level-2" }, [
-      dateInput,
-      prioritySelect,
-    ]);
+    //include subtodos
+
+    const subTodosTree = [];
+    todo.getSubTodos().forEach(subTodo=>{
+      subTodosTree.push(createTodoElement(subTodo))
+    });
+
+
+    const level2 = createEl("fieldset", { className: "form-level-2" }, subTodosTree);
 
     const formTop = createEl("div", { className: "form-top" }, [
       level1,
@@ -314,6 +319,8 @@ export function createForm() {
     const formBottom = createEl("div", { className: "form-bottom" }, [
       formActions,
       projectSelect,
+      dateInput,
+      prioritySelect,
     ]);
 
     const form = createEl(
@@ -595,6 +602,139 @@ export function createForm() {
     });
 
     return form;
+  };
+
+  const createTodoElement = (todo) => {
+    let disableToggleCompleted = false;
+    const subTodosLength = todo.getSubTodos().length;
+    const elements = [];
+    //if (currentlyHistory) disableToggleCompleted = true;
+    const priorityBtn = createEl(
+      "button",
+      {
+        className: `toggle-completed priority-${todo.getPriority()}`,
+        disabled: disableToggleCompleted,
+      },
+      [createEl("i", { className: "fa-solid fa-check hidden" })]
+    );
+
+    const title = createEl("p", {
+      className: "todo-title",
+      textContent: todo.getTitle(),
+    });
+    let iconClassName = "fa-trash";
+    // if (currentlyHistory) {
+    //   iconClassName = "fa-rotate-left";
+    // }
+
+    const trashBtn = createEl("button", { className: "delete" }, [
+      createEl("i", { className: `fa-solid ${iconClassName}` }),
+    ]);
+
+    const topRow = createEl("div", { className: "level-1-info" }, [
+      priorityBtn,
+      title,
+      trashBtn,
+    ]);
+    elements.push(topRow);
+
+    const middleRowContent = [];
+
+    if (todo.getDescription().trim()) {
+      middleRowContent.push(
+        createEl("p", {
+          className: "description",
+          textContent: todo.getDescription(),
+        })
+      );
+    }
+
+    const middleRow = createEl(
+      "div",
+      { className: "level-2-info" },
+      middleRowContent
+    );
+
+    if (middleRowContent.length > 0) elements.push(middleRow);
+
+    const bottomRowContent = [];
+
+
+    if(todo.getSubTodos().length > 1){
+      bottomRowContent.push(
+        createEl(
+          "div",
+          { className : "sub-todos-counter"},
+          [
+            createEl("i", {className : "fa-regular fa-square-plus"}),
+            createEl("p", {className : "sub-todos-counter-text" , textContent : subTodosLength}),
+          ]
+        )
+      );
+    }
+
+    if (todo.getDueDate().trim()) {
+      bottomRowContent.push(
+        createEl("div", { className: "date-container" }, [
+          createEl("i", { className: "fa-regular fa-calendar-minus" }),
+          createEl("p", {
+            className: "date",
+            textContent: todo.getDueDate(),
+          }),
+        ])
+      );
+    }
+
+    // if (currentlyHistory) {
+    //   bottomRowContent.push(
+    //     createEl("div", { className: "location" }, [
+    //       createEl("i", { className: "fa-regular fa-folder" }),
+    //       createEl("p", {
+    //         className: "location-title",
+    //         textContent: user.getProject(todo.getLocation())
+    //           ? user.getProject(todo.getLocation()).getProjectName()
+    //           : "Deleted",
+    //       }),
+    //     ])
+    //   );
+    //}
+
+    const bottomRow = createEl(
+      "div",
+      { className: "level-3-info" },
+      bottomRowContent
+    );
+
+    if (bottomRowContent.length) elements.push(bottomRow);
+
+    let subTodosContainer = null;
+
+    if (subTodosLength > 0) {
+      const subTodos = todo.getSubTodos();
+      const subTodoElements = [];
+
+      subTodos.forEach((subTodo) => {
+        subTodoElements.push(createTodoElement(subTodo));
+      });
+
+      subTodosContainer = createEl(
+        "div",
+        { className: "sub-todo-container" },
+        subTodoElements
+      );
+      elements.push(subTodosContainer);
+    }
+
+    const container = createEl(
+      "div",
+      {
+        className: "todo-container",
+        id : todo.getId(),
+      },
+      elements
+    );
+
+    return container;
   };
 
   return {
