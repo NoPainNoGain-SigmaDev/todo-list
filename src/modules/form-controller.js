@@ -367,13 +367,15 @@ export function createForm() {
       if (date !== newDate) todo.updateDueDate(newDate);
       if (todoPriority !== newPriority) todo.updatePriority(newPriority);
       if (location !== newLocation) {
+        todo.getSubTodos().forEach(subTodo=>subTodo.updateLocation(newLocation));
         const copyTodo = user.newTodo(
           todo.getTitle(),
           todo.getDescription(),
           todo.getDueDate(),
           todo.getPriority(),
           newLocation, 
-          todo.getParent()
+          todo.getParent(),
+          todo.getSubTodos(),
         );
         user.addToProject(copyTodo, newLocation);
         user.deleteTodo(id);
