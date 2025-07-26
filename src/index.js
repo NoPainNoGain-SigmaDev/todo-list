@@ -42,7 +42,7 @@ user.addToProject(
   user.newTodo(
     "Pay bills 💸",
     "Check utilities and credit cards",
-    "25-07-28",
+    "2025-07-28",
     "high",
     thingsToDoId, // location: project ID
     null // parent: no parent
@@ -68,7 +68,7 @@ user.addToProject(
   user.newTodo(
     "Research new laptop 💻",
     "Look at reviews for MacBook Air vs. Dell XPS",
-    "25-08-01",
+    "2025-08-01",
     "medium",
     thingsToDoId,
     null
@@ -81,7 +81,7 @@ user.addToProject(
 const groceriesTodo = user.newTodo(
   "Grocery Shopping 🛒",
   "Plan meals for the week and buy ingredients",
-  "25-07-25",
+  "2025-07-2025",
   "high",
   dailyTasksId, // location: project ID
   null
@@ -113,7 +113,7 @@ groceriesTodo.addSubTodo(
 
 // A simpler daily todo
 user.addToProject(
-  user.newTodo("Walk the dog 🐕", "", "25-07-24", "medium", dailyTasksId, null),
+  user.newTodo("Walk the dog 🐕", "", "2025-07-24", "medium", dailyTasksId, null),
   dailyTasksId
 );
 
@@ -164,7 +164,7 @@ morningRoutineTodo.addSubTodo(
 const bankVisitTodo = user.newTodo(
   "Bank Visit 🏦",
   "Deposit check and update address",
-  "25-07-26",
+  "2025-07-26",
   "high",
   quickRunsId, // location: project ID
   null
@@ -219,7 +219,7 @@ user.addToProject(
 const novelWritingTodo = user.newTodo(
   "Write Novel Chapter 3 ✍️",
   "Focus on character development for Sarah",
-  "25-08-10",
+  "2025-08-10",
   "high",
   creativeId, // location: project ID
   null
@@ -322,7 +322,7 @@ user.addToProject(
 const guitarTodo = user.newTodo(
   "Learn new guitar riff 🎸",
   "Practice 'Stairway to Heaven' solo",
-  "25-07-30",
+  "2025-07-30",
   "medium",
   creativeId, // location: project ID
   null
