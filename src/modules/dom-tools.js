@@ -17,7 +17,6 @@ function closeDialog() {
   const dialog = document.getElementById("dialog");
   dialog.close();
   clear(dialog);
-  console.log("close");
 }
 
 export { createEl, clear, autoResize, closeDialog };
