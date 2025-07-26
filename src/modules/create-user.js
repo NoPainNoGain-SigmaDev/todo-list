@@ -19,20 +19,29 @@ export function createUser(name = "SCRUM MAISTER") {
     projects.push(createProject(newProjectName));
   const userName = () => name;
   const newUserName = (newUserName) => (name = newUserName);
-  const newTodo = (title, description, dueDate, priority, location) =>
-    createTodo({ title, description, dueDate, priority, location });
-  const newChecklistItem = (title) => createTodo({ title });
+  const newTodo = (title, description, dueDate, priority, location, parent) =>
+    createTodo({ title, description, dueDate, priority, location, parent });
   const addToProject = (toDo, projectId = getProjects()[0].getId()) => {
     const targetProject = getProject(projectId);
     targetProject.addTodo(toDo);
   };
-  const deleteFromProject = (todoId, projectId) => {
-    const targetProject = getProject(projectId);
-    const targetTodo = targetProject
-      .getProjectContent()
-      .find((todo) => todo.getId() === todoId);
-    targetProject.removeTodo(targetTodo.getId());
+  const deleteTodo = (todoId) => {
+    const todo = getTodo(todoId);
+    const parentTodo = getTodo(todo.getParent());
+    if(parentTodo){
+      parentTodo.removeSubTodo(todoId);
+      return;
+    }
+    const projectContainer = getProject(todo.getLocation());
+    projectContainer.removeTodo(todoId);
   };
+  const getTodo = (todoId) => {
+    for(const project of projects){
+     const possibleTodo = project.getTodo(todoId);
+     if(possibleTodo)return possibleTodo; 
+    }
+    return null;
+  }
   const deleteProject = (projectId) => {
     const targetProject = projects.findIndex(
       (project) => project.getId() === projectId
@@ -65,6 +74,7 @@ export function createUser(name = "SCRUM MAISTER") {
           priority: todo.getPriority(),
           completed: todo.isCompleted(),
           location: todo.getLocation(),
+          parent : todo.getParent(),
         };
 
         // If there are sub-todos, recursively map them
@@ -102,9 +112,7 @@ export function createUser(name = "SCRUM MAISTER") {
     newProject,
     userName,
     newTodo,
-    newChecklistItem,
     addToProject,
-    deleteFromProject,
     deleteProject,
     self,
     getHistory,
@@ -114,5 +122,7 @@ export function createUser(name = "SCRUM MAISTER") {
     deleteSubTodo,
     getCurrentProjectId,
     updateCurrentProjectId,
+    getTodo,
+    deleteTodo,
   };
 }

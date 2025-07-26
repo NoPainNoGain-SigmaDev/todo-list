@@ -282,7 +282,7 @@ export function screenController() {
           dialogCont.dialogRestore(todoObj, todoObj.getLocation());
           dialogSecondary.showModal();
         } else {
-          dialogCont.dialogDelete(todoId, currentProjectId);
+          dialogCont.dialogDelete(todoId);
           dialog.showModal();
           dialog.addEventListener("close", () => {
             updateProjectContent(currentProjectObject);
@@ -293,7 +293,7 @@ export function screenController() {
       //mark as completed
       if (toggleBtn) {
         user.addToHistory(todoObj);
-        user.deleteFromProject(todoId, currentProjectId);
+        user.deleteTodo(todoId);
         updateProjectContent(currentProjectObject);
         return;
       }

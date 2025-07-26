@@ -426,7 +426,7 @@ export function createForm() {
     return formD;
   };
 
-  const formDelete = (todoId, projectId) => {
+  const formDelete = (todoId) => {
     const warningIcon = createEl("i", {
       className: "fa-solid fa-circle-exclamation",
     });
@@ -465,7 +465,7 @@ export function createForm() {
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      user.deleteFromProject(todoId, projectId);
+      user.deleteTodo(todoId);
       closeDialog();
     });
 
