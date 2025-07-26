@@ -279,7 +279,7 @@ export function screenController() {
       if (deleteBtn) {
         //delete button acts like restore
         if (currentlyHistory) {
-          dialogCont.dialogRestore(todoObj, todoObj.getLocation());
+          dialogCont.dialogRestore(todoId);
           dialogSecondary.showModal();
         } else {
           dialogCont.dialogDelete(todoId);
