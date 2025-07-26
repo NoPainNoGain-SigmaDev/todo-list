@@ -26,9 +26,9 @@ export function dialogController() {
     dialog.appendChild(createForm().formDelete(todoId));
   }
   // format dialog for confirm restore alert
-  const dialogRestore = (todo, projectId) => {
+  const dialogRestore = (todoId) => {
     clear(dialogSecondary);
-    dialogSecondary.appendChild(createForm().formRestore(todo, projectId));
+    dialogSecondary.appendChild(createForm().formRestore(todoId));
   }
   // format dialog for confirm delete project alert
   const dialogDeleteProject = (projectId) => {
