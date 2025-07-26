@@ -4,6 +4,7 @@ export function createTodo({
   dueDate = "",
   priority = "low",
   location = "",
+  parent = null,
 }) {
   let completed = false;
   let subTodos = []; // array of todos
@@ -32,6 +33,8 @@ export function createTodo({
   const updateStatus = () => (completed = !isCompleted());
   const getLocation = () => location;
   const updateLocation = (newLocation) => (location = newLocation);
+  const getParent = () => parent;
+  const updateParent = (newParent) => parent = newParent; 
   //subtodo logic
   const addSubTodo = (subTodo) => subTodos.push(subTodo);
   const getSubTodos = () => subTodos;
@@ -74,5 +77,7 @@ export function createTodo({
     getSubTodos,
     removeSubTodo,
     getSubTodo,
+    getParent,
+    updateParent,
   };
 }
