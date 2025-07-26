@@ -31,29 +31,37 @@ user.newProject("Quick Runs 🏃");
 user.newProject("Creative 🎨");
 
 const projects = user.getProjects();
-const thingsToDoId = projects[0].getId(); // Correctly reference the existing default project
+const thingsToDoId = projects[0].getId();
 const dailyTasksId = projects[1].getId();
 const quickRunsId = projects[2].getId();
 const creativeId = projects[3].getId();
 
 // --- Things ToDo (Default) ---
-// General tasks, some with descriptions, some simple
+// All todos here belong to 'thingsToDoId' project
 user.addToProject(
   user.newTodo(
     "Pay bills 💸",
     "Check utilities and credit cards",
-    "25-07-28", // Using 'YY-MM-DD' for shorter dates as per common practice, if your system handles it
+    "25-07-28",
     "high",
-    thingsToDoId
+    thingsToDoId, // location: project ID
+    null // parent: no parent
   ),
   thingsToDoId
 );
 user.addToProject(
-  user.newTodo("Schedule dentist appointment", "", "", "medium", thingsToDoId),
+  user.newTodo(
+    "Schedule dentist appointment",
+    "",
+    "",
+    "medium",
+    thingsToDoId,
+    null
+  ),
   thingsToDoId
 );
 user.addToProject(
-  user.newTodo("Call mom", "", "", "low", thingsToDoId),
+  user.newTodo("Call mom", "", "", "low", thingsToDoId, null),
   thingsToDoId
 );
 user.addToProject(
@@ -62,30 +70,50 @@ user.addToProject(
     "Look at reviews for MacBook Air vs. Dell XPS",
     "25-08-01",
     "medium",
-    thingsToDoId
+    thingsToDoId,
+    null
   ),
   thingsToDoId
 );
 
 // --- Daily Tasks ---
-// A main todo with a description, due date, and sub-todos for a shopping list
+// All todos here belong to 'dailyTasksId' project
 const groceriesTodo = user.newTodo(
   "Grocery Shopping 🛒",
   "Plan meals for the week and buy ingredients",
   "25-07-25",
   "high",
-  dailyTasksId
+  dailyTasksId, // location: project ID
+  null
 );
 user.addToProject(groceriesTodo, dailyTasksId);
-groceriesTodo.addSubTodo(user.newTodo("Milk", "", "", "low", groceriesTodo.getId()));
-groceriesTodo.addSubTodo(user.newTodo("Eggs", "", "", "low", groceriesTodo.getId()));
-groceriesTodo.addSubTodo(user.newTodo("Bread", "", "", "low", groceriesTodo.getId()));
-groceriesTodo.addSubTodo(user.newTodo("Chicken", "", "", "medium", groceriesTodo.getId()));
-groceriesTodo.addSubTodo(user.newTodo("Vegetables", "", "", "medium", groceriesTodo.getId()));
+// Sub-todos of groceriesTodo
+groceriesTodo.addSubTodo(
+  user.newTodo("Milk", "", "", "low", dailyTasksId, groceriesTodo.getId())
+); // location: project ID, parent: parent todo ID
+groceriesTodo.addSubTodo(
+  user.newTodo("Eggs", "", "", "low", dailyTasksId, groceriesTodo.getId())
+);
+groceriesTodo.addSubTodo(
+  user.newTodo("Bread", "", "", "low", dailyTasksId, groceriesTodo.getId())
+);
+groceriesTodo.addSubTodo(
+  user.newTodo("Chicken", "", "", "medium", dailyTasksId, groceriesTodo.getId())
+);
+groceriesTodo.addSubTodo(
+  user.newTodo(
+    "Vegetables",
+    "",
+    "",
+    "medium",
+    dailyTasksId,
+    groceriesTodo.getId()
+  )
+);
 
 // A simpler daily todo
 user.addToProject(
-  user.newTodo("Walk the dog 🐕", "", "25-07-24", "medium", dailyTasksId),
+  user.newTodo("Walk the dog 🐕", "", "25-07-24", "medium", dailyTasksId, null),
   dailyTasksId
 );
 
@@ -95,72 +123,198 @@ const morningRoutineTodo = user.newTodo(
   "",
   "",
   "medium",
-  dailyTasksId
+  dailyTasksId,
+  null
 );
 user.addToProject(morningRoutineTodo, dailyTasksId);
-morningRoutineTodo.addSubTodo(user.newTodo("Make bed", "", "", "low", morningRoutineTodo.getId()));
-morningRoutineTodo.addSubTodo(user.newTodo("Brush teeth", "", "", "low", morningRoutineTodo.getId()));
-morningRoutineTodo.addSubTodo(user.newTodo("Have breakfast", "", "", "low", morningRoutineTodo.getId()));
+// Sub-todos of morningRoutineTodo
+morningRoutineTodo.addSubTodo(
+  user.newTodo(
+    "Make bed",
+    "",
+    "",
+    "low",
+    dailyTasksId,
+    morningRoutineTodo.getId()
+  )
+);
+morningRoutineTodo.addSubTodo(
+  user.newTodo(
+    "Brush teeth",
+    "",
+    "",
+    "low",
+    dailyTasksId,
+    morningRoutineTodo.getId()
+  )
+);
+morningRoutineTodo.addSubTodo(
+  user.newTodo(
+    "Have breakfast",
+    "",
+    "",
+    "low",
+    dailyTasksId,
+    morningRoutineTodo.getId()
+  )
+);
 
 // --- Quick Runs ---
-// A todo with full details and sub-todos for a multi-step quick run
+// All todos here belong to 'quickRunsId' project
 const bankVisitTodo = user.newTodo(
   "Bank Visit 🏦",
   "Deposit check and update address",
   "25-07-26",
   "high",
-  quickRunsId
+  quickRunsId, // location: project ID
+  null
 );
 user.addToProject(bankVisitTodo, quickRunsId);
+// Sub-todos of bankVisitTodo
 bankVisitTodo.addSubTodo(
-  user.newTodo("Gather documents", "Bank statements, ID", "", "medium", bankVisitTodo.getId())
+  user.newTodo(
+    "Gather documents",
+    "Bank statements, ID",
+    "",
+    "medium",
+    quickRunsId,
+    bankVisitTodo.getId()
+  )
 );
-bankVisitTodo.addSubTodo(user.newTodo("Check bank hours", "", "", "low", bankVisitTodo.getId()));
-bankVisitTodo.addSubTodo(user.newTodo("Find parking", "", "", "low", bankVisitTodo.getId()));
+bankVisitTodo.addSubTodo(
+  user.newTodo(
+    "Check bank hours",
+    "",
+    "",
+    "low",
+    quickRunsId,
+    bankVisitTodo.getId()
+  )
+);
+bankVisitTodo.addSubTodo(
+  user.newTodo(
+    "Find parking",
+    "",
+    "",
+    "low",
+    quickRunsId,
+    bankVisitTodo.getId()
+  )
+);
 
 // A simple title-only quick run
 user.addToProject(
-  user.newTodo("Pick up dry cleaning", "", "", "low", quickRunsId),
+  user.newTodo("Pick up dry cleaning", "", "", "low", quickRunsId, null),
   quickRunsId
 );
 
 // Another simple quick run
 user.addToProject(
-  user.newTodo("Mail package 📦", "", "", "medium", quickRunsId),
+  user.newTodo("Mail package 📦", "", "", "medium", quickRunsId, null),
   quickRunsId
 );
 
 // --- Creative ---
-// A detailed todo with sub-todos for a complex project
+// All todos here belong to 'creativeId' project
 const novelWritingTodo = user.newTodo(
   "Write Novel Chapter 3 ✍️",
   "Focus on character development for Sarah",
   "25-08-10",
   "high",
-  creativeId
+  creativeId, // location: project ID
+  null
 );
 user.addToProject(novelWritingTodo, creativeId);
 
 // Sub-todo for outlining
-const outlineTodo = user.newTodo("Outline plot points", "", "", "medium", novelWritingTodo.getId());
+const outlineTodo = user.newTodo(
+  "Outline plot points",
+  "",
+  "",
+  "medium",
+  creativeId,
+  novelWritingTodo.getId()
+); // location: project ID, parent: parent todo ID
 novelWritingTodo.addSubTodo(outlineTodo);
-// Sub-sub-todos for outlining
-outlineTodo.addSubTodo(user.newTodo("Chapter summary (1-2 sentences)", "", "", "low", outlineTodo.getId()));
-outlineTodo.addSubTodo(user.newTodo("Key character arcs", "", "", "medium", outlineTodo.getId()));
+// Sub-sub-todos of outlineTodo
+outlineTodo.addSubTodo(
+  user.newTodo(
+    "Chapter summary (1-2 sentences)",
+    "",
+    "",
+    "low",
+    creativeId,
+    outlineTodo.getId()
+  )
+); // location: project ID, parent: parent sub-todo ID
+outlineTodo.addSubTodo(
+  user.newTodo(
+    "Key character arcs",
+    "",
+    "",
+    "medium",
+    creativeId,
+    outlineTodo.getId()
+  )
+);
 
 // Sub-todo for drafting with fixed sub-sub-todos
-const draftTodo = user.newTodo("Draft 500 words", "", "", "high", novelWritingTodo.getId());
+const draftTodo = user.newTodo(
+  "Draft 500 words",
+  "",
+  "",
+  "high",
+  creativeId,
+  novelWritingTodo.getId()
+);
 novelWritingTodo.addSubTodo(draftTodo);
-draftTodo.addSubTodo(user.newTodo("Min 200 words about her past", "", "", "low", draftTodo.getId()));
-draftTodo.addSubTodo(user.newTodo("Max 150 words about her family", "", "", "low", draftTodo.getId()));
-draftTodo.addSubTodo(user.newTodo("Min 150 words about her feelings", "", "", "low", draftTodo.getId()));
+// Sub-sub-todos of draftTodo
+draftTodo.addSubTodo(
+  user.newTodo(
+    "Min 200 words about her past",
+    "",
+    "",
+    "low",
+    creativeId,
+    draftTodo.getId()
+  )
+);
+draftTodo.addSubTodo(
+  user.newTodo(
+    "Max 150 words about her family",
+    "",
+    "",
+    "low",
+    creativeId,
+    draftTodo.getId()
+  )
+);
+draftTodo.addSubTodo(
+  user.newTodo(
+    "Min 150 words about her feelings",
+    "",
+    "",
+    "low",
+    creativeId,
+    draftTodo.getId()
+  )
+);
 
-// Another sub-todo
-novelWritingTodo.addSubTodo(user.newTodo("Review previous chapter", "", "", "low", novelWritingTodo.getId()));
+// Another sub-todo of novelWritingTodo
+novelWritingTodo.addSubTodo(
+  user.newTodo(
+    "Review previous chapter",
+    "",
+    "",
+    "low",
+    creativeId,
+    novelWritingTodo.getId()
+  )
+);
 
 // A todo with just a title and priority for brainstorming
 user.addToProject(
-  user.newTodo("Brainstorm new ideas 💡", "", "", "low", creativeId),
+  user.newTodo("Brainstorm new ideas 💡", "", "", "low", creativeId, null),
   creativeId
 );
 
@@ -170,7 +324,8 @@ const guitarTodo = user.newTodo(
   "Practice 'Stairway to Heaven' solo",
   "25-07-30",
   "medium",
-  creativeId
+  creativeId, // location: project ID
+  null
 );
 user.addToProject(guitarTodo, creativeId);
 // Adding a sub-todo with sub-sub-todos
@@ -179,11 +334,31 @@ const section1Todo = user.newTodo(
   "",
   "",
   "high",
-  guitarTodo.getId()
+  creativeId, // location: project ID
+  guitarTodo.getId() // parent: parent todo ID
 );
 guitarTodo.addSubTodo(section1Todo);
-section1Todo.addSubTodo(user.newTodo("Practice scales D minor pentatonic", "", "", "medium", section1Todo.getId()));
-section1Todo.addSubTodo(user.newTodo("Slow tempo drill (60 bpm)", "", "", "low", section1Todo.getId()));
+// Sub-sub-todos of section1Todo
+section1Todo.addSubTodo(
+  user.newTodo(
+    "Practice scales D minor pentatonic",
+    "",
+    "",
+    "medium",
+    creativeId,
+    section1Todo.getId()
+  )
+); // location: project ID, parent: parent sub-todo ID
+section1Todo.addSubTodo(
+  user.newTodo(
+    "Slow tempo drill (60 bpm)",
+    "",
+    "",
+    "low",
+    creativeId,
+    section1Todo.getId()
+  )
+);
 //End demo
 
 //user.self(); //print user
