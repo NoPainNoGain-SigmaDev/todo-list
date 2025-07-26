@@ -530,6 +530,7 @@ export function createForm() {
         todo.getPriority(),
         user.getProject(todo.getLocation())? todo.getLocation() : user.getProjects()[0].getId(),
         user.getTodo(todo.getParent())?todo.getParent():null,
+        todo.getSubTodos(),
       );
       if(copyTodo.getParent()){
         user.getTodo(copyTodo.getParent()).addSubTodo(copyTodo);
