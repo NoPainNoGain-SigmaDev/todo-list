@@ -367,9 +367,16 @@ export function createForm() {
       if (date !== newDate) todo.updateDueDate(newDate);
       if (todoPriority !== newPriority) todo.updatePriority(newPriority);
       if (location !== newLocation) {
-        todo.updateLocation(newLocation);
-        user.addToProject(todo, newLocation);
-        user.deleteFromProject(id, location);
+        const copyTodo = user.newTodo(
+          todo.getTitle(),
+          todo.getDescription(),
+          todo.getDueDate(),
+          todo.getPriority(),
+          newLocation, 
+          todo.getParent()
+        );
+        user.addToProject(copyTodo, newLocation);
+        user.deleteTodo(id);
       }
 
       closeDialog();
@@ -472,7 +479,7 @@ export function createForm() {
     return form;
   };
 
-  const formRestore = (todo) => {
+  const formRestore = (todoId) => {
     const dialogSecondary = document.getElementById("dialog-level-2");
     const warningIcon = createEl("i", {
       className: "fa-regular fa-circle-check",
@@ -513,14 +520,21 @@ export function createForm() {
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      const todo = user.getHistory().getTodo(todoId);
       const copyTodo = user.newTodo(
         todo.getTitle(),
         todo.getDescription(),
         todo.getDueDate(),
         todo.getPriority(),
         user.getProject(todo.getLocation())? todo.getLocation() : user.getProjects()[0].getId(),
+        user.getTodo(todo.getParent())?todo.getParent():null,
       );
-      user.addToProject(copyTodo, copyTodo.getLocation());
+      if(copyTodo.getParent()){
+        user.getTodo(copyTodo.getParent()).addSubTodo(copyTodo);
+      }else{
+        user.addToProject(copyTodo, copyTodo.getLocation());
+      }
+      
       dialogSecondary.close();
     });
 
