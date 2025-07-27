@@ -41,11 +41,11 @@
   margin-left: 3rem;
 }
 .level-2-info{
-  margin-bottom: 1rem;
+  margin-bottom: 0rem;
 }
 .level-3-info {
   height: 3rem;
-  margin-top: 0.8rem;
+  margin-top: 0;
 
   display: flex;
   flex-direction: row;
@@ -71,7 +71,7 @@
   white-space: nowrap;
   min-height: 2rem;
   width: 90%;
-  margin-bottom: 1rem;
+  margin-bottom: 0!important;
 }
 .todo-container {
   position: relative;
