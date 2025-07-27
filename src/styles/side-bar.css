@@ -33,11 +33,15 @@
   width: 100%;
   background-color: transparent;
 }
+#username:focus{
+  outline: none;
+}
 
 .user-pp {
   height: 25px;
   aspect-ratio: 1/1;
-  background-color: var(--color-text-secondary);
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_utsRYqm2mcnKN1AyAACFs04GW7sg6qD5gA&s");
+  background-size: contain;
   border-radius: 50%;
 }
 

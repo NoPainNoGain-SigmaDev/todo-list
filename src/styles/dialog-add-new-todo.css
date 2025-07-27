@@ -114,6 +114,7 @@ input[type="date"]:hover,
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  margin-left: 1rem;
 }
 .project-select option {
   max-width: 140px;
@@ -140,7 +141,10 @@ input[type="date"]:hover,
 #form-update-todo-submit,
 .add-new-sub-todo-btn,
 #form-delete-submit,
-#form-delete-project-submit {
+#form-delete-project-submit,
+#form-restore-submit,
+#form-discard-submi,
+#form-add-project-submit {
   width: 90px;
   height: 2.8rem;
   border: none;
@@ -153,7 +157,11 @@ input[type="date"]:hover,
 }
 #form-add-todo:hover,
 #form-delete-submit:hover,
-#form-delete-project-submit:hover {
+#form-delete-project-submit:hover,
+#form-restore-submit:hover,
+#form-update-todo-submit:hover,
+#form-discard-submit:hover,
+#form-add-project-submit:hover {
   background-color: #b23a32;
 }
 
@@ -193,4 +201,7 @@ h3 {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+.form-top{
+    min-height: 100px;
 }
