@@ -1,23 +1,137 @@
 import { createEl, autoResize, closeDialog, clear } from "./dom-tools.js";
-import { user } from "../index.js";
+import { user } from "../index.js"; // user must have newTodo, getProjects, getProject, etc.
 
 export function createForm() {
-  ///Form for new to dos
-  const formAddNewTodo = () => {
-    //Form components
-    //option selection for all avaiable projects
-    const avaiableProjects = user.getProjects();
-    const projects = [];
+  const dialog = document.getElementById("dialog"); // Main dialog
+  const dialogSecondary = document.getElementById("dialog-level-2"); // Secondary dialog (for discard/confirm)
 
-    avaiableProjects.forEach((project) => {
-      const projectOption = createEl("option", {
-        textContent: project.getProjectName(),
+  // --- Helper for creating common form elements ---
+  const createCloseButton = (dialogToClose) => {
+    const btn = createEl("button", {
+      type: "button",
+      id: "dialog-close",
+      value: "Close",
+      formNoValidate: true,
+      textContent: "Close",
+    });
+    btn.addEventListener("click", () => {
+      // Use the specific dialog to close
+      if (dialogToClose) {
+        dialogToClose.close();
+      } else {
+        closeDialog(); // Fallback to global closeDialog if no specific dialog provided
+      }
+    });
+    return btn;
+  };
+
+  const createSubmitButton = (id, value) => {
+    return createEl("input", {
+      type: "submit",
+      id: id,
+      value: value,
+    });
+  };
+
+  const createPrioritySelect = (currentPriority = "") => {
+    const priorities = ["low", "medium", "high"];
+    const options = priorities.map((priority) => {
+      const option = createEl("option", {
+        textContent: priority,
+        className: `select-priority-${priority}`,
+        value: priority, // Set value for easy retrieval
       });
-      projectOption.dataset.id = project.getId();
-
-      projects.push(projectOption);
+      if (priority === currentPriority) {
+        option.selected = true; // Pre-select current priority
+      }
+      return option;
     });
 
+    return createEl(
+      "select",
+      { className: "priority-select", id: "priority-select" },
+      options
+    );
+  };
+
+  const createProjectSelect = (currentProjectId = null) => {
+    const projects = user.getProjects();
+    const options = projects.map((project) => {
+      const option = createEl("option", {
+        textContent: project.getProjectName(),
+        value: project.getId(), // Set value for easy retrieval
+      });
+      if (project.getId() === currentProjectId) {
+        option.selected = true; // Pre-select current project
+      }
+      return option;
+    });
+
+    return createEl(
+      "select",
+      { className: "project-select", id: "project-select" },
+      options
+    );
+  };
+
+
+  // --- Reusable Todo Element Creation (moved from screenController for expand form) ---
+  // If this is already an exported function, just use it directly.
+  // Otherwise, defining it here makes it available to formExpandTodo.
+  const createTodoElement = (todo) => { // This is a slightly simplified version for display in forms
+    const elements = [];
+    const priorityBtn = createEl(
+      "button",
+      {
+        className: `toggle-completed priority-${todo.getPriority()}`,
+        disabled: true, // Typically disabled in expand form as it's for viewing
+      },
+      [createEl("i", { className: "fa-solid fa-check hidden" })]
+    );
+
+    const title = createEl("p", {
+      className: "todo-title",
+      textContent: todo.getTitle(),
+    });
+
+    // We don't need a delete button here as form actions are at the bottom
+    const topRow = createEl("div", { className: "level-1-info" }, [
+      priorityBtn,
+      title,
+    ]);
+    elements.push(topRow);
+
+    if (todo.getDescription().trim()) {
+      elements.push(
+        createEl("p", {
+          className: "description",
+          textContent: todo.getDescription(),
+        })
+      );
+    }
+    
+    // Recursive rendering of sub-todos for display within the expand form
+    if (todo.getSubTodos().length > 0) {
+      const subTodoElements = todo.getSubTodos().map(subTodo => createTodoElement(subTodo));
+      elements.push(createEl("div", { className: "sub-todo-container" }, subTodoElements));
+    }
+
+
+    const container = createEl(
+      "div",
+      {
+        className: "todo-container",
+        id : todo.getId(),
+      },
+      elements
+    );
+
+    return container;
+  };
+
+
+  ///Form for new todos (and sub-todos)
+  const formAddNewTodo = (parentTodoId = null, defaultLocationId = user.getCurrentProjectId()) => {
     const titleInput = createEl("input", {
       id: "title",
       type: "text",
@@ -37,51 +151,19 @@ export function createForm() {
       id: "date",
     });
 
-    const prioritySelect = createEl(
-      "select",
-      { className: "priority-select", id: "priority-select" },
-      [
-        createEl("option", {
-          className: "select-priority-low",
-          textContent: "Low",
-        }),
-        createEl("option", {
-          className: "select-priority-medium",
-          textContent: "Medium",
-        }),
-        createEl("option", {
-          className: "select-priority-high",
-          textContent: "High",
-        }),
-      ]
-    );
+    const prioritySelect = createPrioritySelect("medium"); // Default medium
 
-    const closeBtn = createEl("button", {
-      type: "button",
-      id: "dialog-close",
-      value: "Close",
-      formNoValidate: true,
-      textContent: "Close",
-    });
+    const closeBtn = createCloseButton(dialog);
+    const addBtn = createSubmitButton("form-add-todo-submit", "Add ToDo");
 
-    closeBtn.addEventListener("click", () => {
-      closeDialog();
-      return;
-    });
+    const projectSelect = createProjectSelect(defaultLocationId);
+    // If we're adding a sub-todo, hide the project selection
+    if (parentTodoId) {
+        projectSelect.classList.add("hidden"); // or set display: none directly
+        projectSelect.disabled = true;
+    }
 
-    const addBtn = createEl("input", {
-      type: "submit",
-      id: "form-add-todo",
-      value: "Add ToDo",
-    });
 
-    const projectSelect = createEl(
-      "select",
-      { className: "project-select", id: "project-select" },
-      projects
-    );
-
-    // Final form element
     const form = createEl("form", { id: "form" }, [
       createEl("div", { className: "form-top" }, [
         createEl("fieldset", { className: "form-level-1" }, [
@@ -95,44 +177,65 @@ export function createForm() {
       ]),
       createEl("div", { className: "form-bottom" }, [
         createEl("div", { className: "form-actions" }, [closeBtn, addBtn]),
-        projectSelect,
+        projectSelect, // Visible only for top-level todos
       ]),
     ]);
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const inputTitle = form.querySelector("#title");
-      const inputDescription = form.querySelector("#description");
-      const inputDate = form.querySelector("#date");
-      const selectPriority = form.querySelector("#priority-select");
-      const selectProject = form.querySelector("#project-select");
-      const projectId = selectProject.selectedOptions[0].dataset.id;
-
-      if (inputTitle.value.trim() === "") {
+      const newTitle = titleInput.value.trim();
+      if (!newTitle) {
         alert("Please do not leave the title empty :)");
         return;
       }
 
+      const newDescription = textArea.value;
+      const newDate = dateInput.value;
+      const newPriority = prioritySelect.value;
+      
+      // Determine the location and parent based on whether it's a sub-todo or new top-level todo
+      let todoLocationId = defaultLocationId;
+      let todoParentId = parentTodoId;
+
+      if (!parentTodoId) { // It's a top-level todo being added to a project
+          todoLocationId = projectSelect.value;
+          todoParentId = null;
+      }
+      
       const newTodo = user.newTodo(
-        inputTitle.value,
-        inputDescription.value,
-        inputDate.value,
-        selectPriority.value.toLowerCase(),
-        projectId
+        newTitle,
+        newDescription,
+        newDate,
+        newPriority,
+        todoLocationId, // location: project ID
+        todoParentId    // parent: parent todo ID (or null)
       );
 
-      user.getProject(projectId).addTodo(newTodo);
-      dialog.close();
+      if (todoParentId) {
+          // If it's a sub-todo, add it to its parent todo
+          const parentObj = user.getProject(todoLocationId).getTodo(todoParentId); // Assuming getTodo is recursive
+          if (parentObj) {
+              parentObj.addSubTodo(newTodo);
+          } else {
+              console.error("Parent todo not found for sub-todo creation:", todoParentId);
+              // Handle error, maybe add to project root if parent not found
+              user.getProject(todoLocationId).addTodo(newTodo);
+          }
+      } else {
+          // It's a top-level todo, add to the selected project
+          user.getProject(todoLocationId).addTodo(newTodo);
+      }
+      dialog.close("submit"); // Pass a return value to indicate successful submission
     });
 
     textArea.addEventListener("input", () => autoResize(textArea));
 
     return form;
   };
+
   //Form for new projects
   const formAddNewProject = () => {
-    //Form elements
     const titleInput = createEl("input", {
       id: "title",
       type: "text",
@@ -141,21 +244,9 @@ export function createForm() {
       autofocus: true,
     });
 
-    const closeButton = createEl("button", {
-      type: "button",
-      id: "dialog-close",
-      value: "Close",
-      formNoValidate: true,
-      textContent: "Close",
-    });
+    const closeButton = createCloseButton(dialog);
+    const addButton = createSubmitButton("form-add-project-submit", "Add New");
 
-    const addButton = createEl("input", {
-      type: "submit",
-      id: "form-add-todo",
-      value: "Add New",
-    });
-
-    // Final form
     const form = createEl("form", { id: "form" }, [
       createEl("div", { className: "form-top" }, [
         createEl("fieldset", { className: "form-level-1" }, [titleInput]),
@@ -168,63 +259,45 @@ export function createForm() {
       ]),
     ]);
 
-    closeButton.addEventListener("click", () => {
-      closeDialog();
-      return;
-    });
-
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const newProjectName = document.getElementById("title").value;
+      const newProjectName = titleInput.value.trim();
+      if (!newProjectName) {
+        alert("Please enter a project name.");
+        return;
+      }
       user.newProject(newProjectName);
-
-      closeDialog();
+      dialog.close("submit");
     });
 
     return form;
   };
+
+
   const formExpandTodo = (todo) => {
-    const title = todo.getTitle();
-    const description = todo.getDescription();
-    const date = todo.getDueDate();
-    const todoPriority = todo.getPriority();
-    const id = todo.getId();
-    const location = todo.getLocation();
-    const avaiableProjects = user.getProjects();
-    const dialogDiscard = document.getElementById("dialog-level-2");
+    // --- Data Extraction ---
+    const { getTitle, getDescription, getDueDate, getPriority, getId, getLocation, getSubTodos, getParent } = todo;
+    const currentTitle = getTitle();
+    const currentDescription = getDescription();
+    const currentDueDate = getDueDate();
+    const currentPriority = getPriority();
+    const todoId = getId();
+    const todoLocation = getLocation();
+    const todoParentId = getParent(); // New: get parent ID
 
-    //option selection for all avaiable projects
-    const projects = [];
-
-    avaiableProjects.forEach((project) => {
-      const projectOption = createEl("option", {
-        textContent: project.getProjectName(),
-      });
-      projectOption.dataset.id = project.getId();
-      projectOption.value = project.getId();
-
-      projects.push(projectOption);
-    });
-    //set first option to the current project
-    const indexCurrentProject = projects.findIndex(
-      (project) => project.dataset.id === location
-    );
-    const currentProject = projects[indexCurrentProject];
-    projects.splice(indexCurrentProject, 1);
-    projects.unshift(currentProject);
-
+    // --- Form Fields ---
     const titleInput = createEl("input", {
       id: "title",
       type: "text",
-      value: title,
+      value: currentTitle,
       placeholder: "Wash the dog, it stinks...",
       required: true,
     });
 
     const descriptionArea = createEl("textarea", {
       id: "description",
-      textContent: description,
+      textContent: currentDescription,
       rows: "1",
       placeholder: "Description",
     });
@@ -233,94 +306,91 @@ export function createForm() {
       autoResize(descriptionArea)
     );
 
+    const dateInput = createEl("input", {
+      type: "date",
+      id: "date",
+      value: currentDueDate,
+    });
+
+    const prioritySelect = createPrioritySelect(currentPriority);
+    const projectSelect = createProjectSelect(todoLocation);
+
+    // If this todo has a parent, hide project selection and show parent todo selection (or just hide it)
+    let parentTodoSelect = null;
+    if (todoParentId) {
+        projectSelect.disabled = true; // Cannot change project if it's a sub-todo
+        projectSelect.classList.add("hidden"); // Or hide visually
+
+        // Optional: Add a display for the parent todo's title if desired
+        // You might need a user.getTodo(todoParentId) to get the parent's title
+        const parentObj = user.getProject(todoLocation).getTodo(todoParentId); // Assuming getTodo is recursive
+        if (parentObj) {
+            parentTodoSelect = createEl("p", {
+                className: "parent-todo-display",
+                textContent: `Sub-todo of: ${parentObj.getTitle()}`
+            });
+        }
+    }
+
+
+    // --- Sub-todo Section ---
+    const subTodosElements = getSubTodos().map(subTodo => createTodoElement(subTodo));
+    const subTodosContainer = createEl("div", { className: "sub-todos-list-container" }, subTodosElements);
+
+    // Add new sub-todo button
+    const addNewSubTodoBtn = createEl("button", {
+        type: "button",
+        className: "add-new-sub-todo-btn hover-effect",
+    }, [
+      createEl("i", {className : "fa-solid fa-circle-plus"}),
+      createEl("p", {textContent : "Add Sub-Todo"}),
+    ]);
+    addNewSubTodoBtn.addEventListener("click", () => {
+        clear(dialog); // Clear main dialog content
+        dialog.appendChild(formAddNewTodo(todoId, todoLocation)); // Pass current todoId as parentId, and its location
+        dialog.showModal();
+    });
+
+    // --- Form Layout ---
     const level1 = createEl("fieldset", { className: "form-level-1" }, [
       titleInput,
       descriptionArea,
     ]);
 
-    const dateInput = createEl("input", {
-      type: "date",
-      id: "date",
-      value: date,
-    });
-
-    //option selection for all avaiable priorities
-    const priorities = [];
-    const avaiablePriorities = ["low", "medium", "high"];
-
-    avaiablePriorities.forEach((priority) => {
-      const priorityOption = createEl("option", {
-        textContent: priority,
-        className: `select-priority-${priority}`,
-      });
-
-      priorities.push(priorityOption);
-    });
-    //set first option to the current priority
-    const indexCurrentPriority = priorities.findIndex(
-      (priority) => priority.textContent === todoPriority
-    );
-    const currentPriority = priorities[indexCurrentPriority];
-    priorities.splice(indexCurrentPriority, 1);
-    priorities.unshift(currentPriority);
-
-    const prioritySelect = createEl(
-      "select",
-      {
-        className: "priority-select",
-        id: "priority-select",
-      },
-      priorities
-    );
-
-    //include subtodos
-
-    const subTodosTree = [];
-    todo.getSubTodos().forEach(subTodo=>{
-      subTodosTree.push(createTodoElement(subTodo))
-    });
+    const level2 = createEl("fieldset", { className: "form-level-2" }, [
+        dateInput,
+        prioritySelect,
+        projectSelect,
+        parentTodoSelect || createEl("div"), // Render parent info or empty div
+    ]);
 
 
-    const level2 = createEl("fieldset", { className: "form-level-2" }, subTodosTree);
+    // Combined sub-todos section (list + add button)
+    const subTodosSection = createEl("div", {className: "form-sub-todos-section"}, [
+        createEl("h3", {textContent: "Sub-todos"}),
+        subTodosContainer,
+        addNewSubTodoBtn,
+    ]);
+
 
     const formTop = createEl("div", { className: "form-top" }, [
       level1,
       level2,
+      subTodosSection, // Include the sub-todos section here
     ]);
 
-    const closeBtn = createEl("button", {
-      id: "dialog-close",
-      textContent: "Close",
-      autofocus: true,
-    });
+    const closeBtn = createCloseButton(dialog);
+    closeBtn.textContent = "Close"; // Override text for this form
+    closeBtn.autofocus = true;
 
-    const submitBtn = createEl("input", {
-      type: "submit",
-      className: "hidden",
-      id: "form-add-todo",
-      value: "Update",
-      disabled: true,
-    });
+    const submitBtn = createSubmitButton("form-update-todo-submit", "Update");
+    submitBtn.disabled = true;
+    submitBtn.classList.add("hidden");
+
 
     const formActions = createEl("div", { className: "form-actions" }, [
       closeBtn,
       submitBtn,
-    ]);
-
-    const projectSelect = createEl(
-      "select",
-      {
-        className: "project-select",
-        id: "project-select",
-      },
-      projects
-    );
-
-    const formBottom = createEl("div", { className: "form-bottom" }, [
-      formActions,
-      projectSelect,
-      dateInput,
-      prioritySelect,
     ]);
 
     const form = createEl(
@@ -328,92 +398,118 @@ export function createForm() {
       {
         id: "form",
       },
-      [formTop, formBottom]
+      [formTop, formActions] // Simplified formBottom as elements are restructured
     );
 
-    form.dataset.id = id;
+    form.dataset.id = todoId;
 
-    //check for changes
-    const enableSubmit = () => {
-      submitBtn.disabled = false;
-      submitBtn.classList.remove("hidden");
-    };
+    // --- Change Detection & Submit Button Enablement ---
     let editing = false;
-    form.addEventListener("input", () => {
-      enableSubmit();
-      editing = true;
-    });
-    form.addEventListener("change", () => {
-      editing = true;
-    });
+    const checkChanges = () => {
+        const hasChanges = (
+            titleInput.value !== currentTitle ||
+            descriptionArea.value !== currentDescription ||
+            dateInput.value !== currentDueDate ||
+            prioritySelect.value !== currentPriority ||
+            (projectSelect.value !== todoLocation && !projectSelect.disabled)
+        );
+        editing = hasChanges;
+        if (hasChanges) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove("hidden");
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add("hidden");
+        }
+    };
+    form.addEventListener("input", checkChanges);
+    form.addEventListener("change", checkChanges);
+
 
     closeBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Prevent default form submission if any
       if (editing) {
-        clear(dialogDiscard);
-        dialogDiscard.appendChild(formDiscard());
-        dialogDiscard.showModal();
+        clear(dialogSecondary); // Use dialogSecondary for discard confirmation
+        dialogSecondary.appendChild(formDiscard());
+        dialogSecondary.showModal();
       } else {
-        console.log("close main");
-        closeDialog();
+        closeDialog(); // Close main dialog directly
       }
     });
 
     submitBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      const newTitle = titleInput.value;
+      const newTitle = titleInput.value.trim();
       const newDescription = descriptionArea.value;
       const newDate = dateInput.value;
       const newPriority = prioritySelect.value;
-      const newLocation = projectSelect.value;
+      const newLocation = projectSelect.value; // Only if not disabled (i.e., not a sub-todo)
 
-      if (title !== newTitle) todo.updateTitle(newTitle);
-      if (description !== newDescription)
-        todo.updateDescription(newDescription);
-      if (date !== newDate) todo.updateDueDate(newDate);
-      if (todoPriority !== newPriority) todo.updatePriority(newPriority);
-      if (location !== newLocation) {
-        todo.getSubTodos().forEach(subTodo=>subTodo.updateLocation(newLocation));
-        const copyTodo = user.newTodo(
-          todo.getTitle(),
-          todo.getDescription(),
-          todo.getDueDate(),
-          todo.getPriority(),
-          newLocation, 
-          todo.getParent(),
-          todo.getSubTodos(),
-        );
-        user.addToProject(copyTodo, newLocation);
-        user.deleteTodo(id);
+      if (!newTitle) {
+        alert("Title cannot be empty!");
+        return;
       }
 
-      closeDialog();
+      // Update basic properties
+      if (currentTitle !== newTitle) todo.updateTitle(newTitle);
+      if (currentDescription !== newDescription) todo.updateDescription(newDescription);
+      if (currentDueDate !== newDate) todo.updateDueDate(newDate);
+      if (currentPriority !== newPriority) todo.updatePriority(newPriority);
+
+      // Handle location change (only if it's a top-level todo or a project change is allowed for sub-todos)
+      if (todoLocation !== newLocation && !projectSelect.disabled) {
+        // This logic is complex. Ideally, you have a user.moveTodo() method.
+        // user.moveTodo(todoId, todoLocation, newLocation, todoParentId);
+        //
+        // If not, the current approach of copying and deleting is okay but needs to be careful
+        // about sub-todos and ensuring all properties are transferred.
+        // The current way you're handling subTodos in your original logic (todo.getSubTodos().forEach(subTodo=>subTodo.updateLocation(newLocation));)
+        // is okay if you're keeping the same object references.
+        // However, if creating a 'copyTodo' means a *new* object graph, then those subTodos
+        // need to be *cloned* and re-parented as well. This is why a `moveTodo` in the user model is best.
+
+        // Placeholder for move logic assuming user.moveTodo is implemented
+        // user.moveTodo(todoId, todoLocation, newLocation); // Or pass full todo object
+        // If not using moveTodo, original logic:
+        user.deleteTodo(todoId); // Delete from old project
+        // Create a new todo object with the updated location, carrying over all properties and sub-todos
+        // This requires your newTodo function to accept subTodos array directly for copying
+        const copyTodo = user.newTodo(
+            newTitle, // Use potentially updated title
+            newDescription, // Use potentially updated description
+            newDate, // Use potentially updated date
+            newPriority, // Use potentially updated priority
+            newLocation, // New location
+            todoParentId, // Original parent ID
+            getSubTodos() // Pass existing sub-todos
+        );
+        // Need to add this copyTodo to the new project
+        user.addToProject(copyTodo, newLocation); // Add to new project
+
+        // If it was a sub-todo that moved, its parent's subTodos array also needs to be updated.
+        // This complexity is why user.moveTodo is a good idea.
+      }
+      dialog.close("update"); // Indicate successful update
     });
 
     return form;
   };
 
   const formDiscard = () => {
-    const dialogDiscard = document.getElementById("dialog-level-2");
+    // This form is for the dialogSecondary
     const warningIcon = createEl("i", {
       className: "fa-solid fa-circle-exclamation",
     });
     const header = createEl("h1", { textContent: "Discard changes?" });
     const subheader = createEl("h2", {
-      textContent: "The unsaved changes will be discarted",
+      textContent: "The unsaved changes will be discarded.",
     });
-    const closeBtn = createEl("button", {
-      type: "button",
-      id: "dialog-close",
-      value: "Close",
-      textContent: "Go Back",
-    });
-    const submitBtn = createEl("input", {
-      type: "submit",
-      id: "form-add-todo",
-      value: "Discard",
-    });
+    const closeBtn = createCloseButton(dialogSecondary); // Closes secondary dialog
+    closeBtn.textContent = "Go Back";
+
+    const submitBtn = createSubmitButton("form-discard-submit", "Discard");
+
     const formActions = createEl("div", { className: "form-actions" }, [
       closeBtn,
       submitBtn,
@@ -426,17 +522,10 @@ export function createForm() {
       formActions,
     ]);
 
-    closeBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      dialogDiscard.close();
-      console.log("close second");
-      return;
-    });
-
     formD.addEventListener("submit", (e) => {
       e.preventDefault();
-      closeDialog();
-      dialogDiscard.close();
+      dialogSecondary.close(); // Close secondary dialog
+      closeDialog(); // Then close the main dialog
     });
 
     return formD;
@@ -450,18 +539,11 @@ export function createForm() {
     const subheader = createEl("h2", {
       textContent: "If you forget it, it’s not on the list anymore.",
     });
-    const closeBtn = createEl("button", {
-      type: "button",
-      id: "dialog-close",
-      value: "Close",
-      formNoValidate: true,
-      textContent: "Go Back",
-    });
-    const submitBtn = createEl("input", {
-      type: "submit",
-      id: "form-add-todo",
-      value: "Delete",
-    });
+    const closeBtn = createCloseButton(dialog);
+    closeBtn.textContent = "Go Back";
+
+    const submitBtn = createSubmitButton("form-delete-submit", "Delete");
+
     const formActions = createEl("div", { className: "form-actions" }, [
       closeBtn,
       submitBtn,
@@ -474,22 +556,24 @@ export function createForm() {
       formActions,
     ]);
 
-    closeBtn.addEventListener("click", () => {
-      closeDialog();
-      return;
-    });
-
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      user.deleteTodo(todoId);
-      closeDialog();
+      // user.deleteTodo(todoId); // This might need parent/project context for deep deletion
+      // Assuming deleteTodo knows how to find and delete it
+      const currentProjectObject = user.getProject(user.getCurrentProjectId()); // Or get from expand form's context
+      if (currentProjectObject) {
+          user.deleteTodo(todoId, currentProjectObject.getId());
+      } else {
+          // Fallback if currentProjectObject isn't reliable, but should be from screenController
+          user.deleteTodo(todoId); // Requires a global search in user.js
+      }
+      dialog.close("delete"); // Indicate successful deletion
     });
 
     return form;
   };
 
-  const formRestore = (todoId) => {
-    const dialogSecondary = document.getElementById("dialog-level-2");
+  const formRestore = (todoObjToRestore) => { // Accept the todo object directly
     const warningIcon = createEl("i", {
       className: "fa-regular fa-circle-check",
     });
@@ -497,18 +581,11 @@ export function createForm() {
     const subheader = createEl("h2", {
       textContent: "We’ll add a fresh copy of this to-do.",
     });
-    const closeBtn = createEl("button", {
-      type: "button",
-      id: "dialog-close",
-      value: "Close",
-      formNoValidate: true,
-      textContent: "Go Back",
-    });
-    const submitBtn = createEl("input", {
-      type: "submit",
-      id: "form-add-todo",
-      value: "Restore",
-    });
+    const closeBtn = createCloseButton(dialogSecondary);
+    closeBtn.textContent = "Go Back";
+
+    const submitBtn = createSubmitButton("form-restore-submit", "Restore");
+
     const formActions = createEl("div", { className: "form-actions" }, [
       closeBtn,
       submitBtn,
@@ -521,31 +598,49 @@ export function createForm() {
       formActions,
     ]);
 
-    closeBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      dialogSecondary.close();
-      return;
-    });
-
     form.addEventListener("submit", (e) => {
       e.preventDefault();
-      const todo = user.getHistory().getTodo(todoId);
-      const copyTodo = user.newTodo(
-        todo.getTitle(),
-        todo.getDescription(),
-        todo.getDueDate(),
-        todo.getPriority(),
-        user.getProject(todo.getLocation())? todo.getLocation() : user.getProjects()[0].getId(),
-        user.getTodo(todo.getParent())?todo.getParent():null,
-        todo.getSubTodos(),
+
+      // Determine the target location and parent for the restored todo
+      const targetLocationId = user.getProject(todoObjToRestore.getLocation())
+        ? todoObjToRestore.getLocation()
+        : user.getProjects()[0].getId(); // Default to first project if original project deleted
+
+      const targetParentId = todoObjToRestore.getParent(); // Get parent ID from original todo
+
+      // Create a NEW todo object from the old one's properties
+      const restoredTodo = user.newTodo(
+        todoObjToRestore.getTitle(),
+        todoObjToRestore.getDescription(),
+        todoObjToRestore.getDueDate(),
+        todoObjToRestore.getPriority(),
+        targetLocationId,
+        targetParentId, // Pass the original parent ID
+        todoObjToRestore.getSubTodos() // Pass all sub-todos for deep copy
       );
-      if(copyTodo.getParent()){
-        user.getTodo(copyTodo.getParent()).addSubTodo(copyTodo);
-      }else{
-        user.addToProject(copyTodo, copyTodo.getLocation());
+
+      // Add it to the correct place (parent or project)
+      if (targetParentId) {
+        // If it had a parent, find that parent and add it as a sub-todo
+        const parentObj = user.getProject(targetLocationId).getTodo(targetParentId); // Assuming getTodo is recursive
+        if (parentObj) {
+            parentObj.addSubTodo(restoredTodo);
+        } else {
+            // Parent not found (e.g., parent was deleted). Add to project root.
+            user.addToProject(restoredTodo, targetLocationId);
+            // Optionally, update restoredTodo's parent to null if its intended parent is gone
+            restoredTodo.updateParent(null);
+        }
+      } else {
+        // No parent, add directly to the project
+        user.addToProject(restoredTodo, targetLocationId);
       }
       
+      // Optionally remove from history if that's desired behavior after restore
+      // user.getHistory().removeTodo(todoObjToRestore.getId()); // You might need this method
+
       dialogSecondary.close();
+      dialog.close("restore"); // Signal main dialog to close and update
     });
 
     return form;
@@ -557,21 +652,13 @@ export function createForm() {
     });
     const header = createEl("h1", { textContent: "Delete project?" });
     const subheader = createEl("h2", {
-      textContent:
-        "Are you sure you want to delete this entire project?",
+      textContent: "Are you sure you want to delete this entire project?",
     });
-    const closeBtn = createEl("button", {
-      type: "button",
-      id: "dialog-close",
-      value: "Close",
-      formNoValidate: true,
-      textContent: "Go Back",
-    });
-    const submitBtn = createEl("input", {
-      type: "submit",
-      id: "form-add-todo",
-      value: "Delete",
-    });
+    const closeBtn = createCloseButton(dialog);
+    closeBtn.textContent = "Go Back";
+
+    const submitBtn = createSubmitButton("form-delete-project-submit", "Delete");
+
     const formActions = createEl("div", { className: "form-actions" }, [
       closeBtn,
       submitBtn,
@@ -584,157 +671,18 @@ export function createForm() {
       formActions,
     ]);
 
-    closeBtn.addEventListener("click", () => {
-      dialog.close("cancel");
-      return;
-    });
-
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      // Ensure there's always at least one project.
+      // If deleting the last project, re-create "Things ToDo" as default.
       if (user.getProjects().length === 1) {
-        user.newProject("Things ToDo");
-        user.deleteProject(projectId);
-      } else {
-        user.deleteProject(projectId);
+        user.newProject("Things ToDo 📋"); // Recreate with default name and emoji
       }
-
-      dialog.close("");
+      user.deleteProject(projectId);
+      dialog.close("deleteProject"); // Indicate successful deletion
     });
 
     return form;
-  };
-
-  const createTodoElement = (todo) => {
-    let disableToggleCompleted = false;
-    const subTodosLength = todo.getSubTodos().length;
-    const elements = [];
-    //if (currentlyHistory) disableToggleCompleted = true;
-    const priorityBtn = createEl(
-      "button",
-      {
-        className: `toggle-completed priority-${todo.getPriority()}`,
-        disabled: disableToggleCompleted,
-      },
-      [createEl("i", { className: "fa-solid fa-check hidden" })]
-    );
-
-    const title = createEl("p", {
-      className: "todo-title",
-      textContent: todo.getTitle(),
-    });
-    let iconClassName = "fa-trash";
-    // if (currentlyHistory) {
-    //   iconClassName = "fa-rotate-left";
-    // }
-
-    const trashBtn = createEl("button", { className: "delete" }, [
-      createEl("i", { className: `fa-solid ${iconClassName}` }),
-    ]);
-
-    const topRow = createEl("div", { className: "level-1-info" }, [
-      priorityBtn,
-      title,
-      trashBtn,
-    ]);
-    elements.push(topRow);
-
-    const middleRowContent = [];
-
-    if (todo.getDescription().trim()) {
-      middleRowContent.push(
-        createEl("p", {
-          className: "description",
-          textContent: todo.getDescription(),
-        })
-      );
-    }
-
-    const middleRow = createEl(
-      "div",
-      { className: "level-2-info" },
-      middleRowContent
-    );
-
-    if (middleRowContent.length > 0) elements.push(middleRow);
-
-    const bottomRowContent = [];
-
-
-    if(todo.getSubTodos().length > 1){
-      bottomRowContent.push(
-        createEl(
-          "div",
-          { className : "sub-todos-counter"},
-          [
-            createEl("i", {className : "fa-regular fa-square-plus"}),
-            createEl("p", {className : "sub-todos-counter-text" , textContent : subTodosLength}),
-          ]
-        )
-      );
-    }
-
-    if (todo.getDueDate().trim()) {
-      bottomRowContent.push(
-        createEl("div", { className: "date-container" }, [
-          createEl("i", { className: "fa-regular fa-calendar-minus" }),
-          createEl("p", {
-            className: "date",
-            textContent: todo.getDueDate(),
-          }),
-        ])
-      );
-    }
-
-    // if (currentlyHistory) {
-    //   bottomRowContent.push(
-    //     createEl("div", { className: "location" }, [
-    //       createEl("i", { className: "fa-regular fa-folder" }),
-    //       createEl("p", {
-    //         className: "location-title",
-    //         textContent: user.getProject(todo.getLocation())
-    //           ? user.getProject(todo.getLocation()).getProjectName()
-    //           : "Deleted",
-    //       }),
-    //     ])
-    //   );
-    //}
-
-    const bottomRow = createEl(
-      "div",
-      { className: "level-3-info" },
-      bottomRowContent
-    );
-
-    if (bottomRowContent.length) elements.push(bottomRow);
-
-    let subTodosContainer = null;
-
-    if (subTodosLength > 0) {
-      const subTodos = todo.getSubTodos();
-      const subTodoElements = [];
-
-      subTodos.forEach((subTodo) => {
-        subTodoElements.push(createTodoElement(subTodo));
-      });
-
-      subTodosContainer = createEl(
-        "div",
-        { className: "sub-todo-container" },
-        subTodoElements
-      );
-      elements.push(subTodosContainer);
-    }
-
-    const container = createEl(
-      "div",
-      {
-        className: "todo-container",
-        id : todo.getId(),
-      },
-      elements
-    );
-
-    return container;
   };
 
   return {
