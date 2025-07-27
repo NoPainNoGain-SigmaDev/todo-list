@@ -76,8 +76,7 @@ export function createForm() {
 
 
   // --- Reusable Todo Element Creation (moved from screenController for expand form) ---
-  // If this is already an exported function, just use it directly.
-  // Otherwise, defining it here makes it available to formExpandTodo.
+  
   const createTodoElement = (todo) => { // This is a slightly simplified version for display in forms
     const elements = [];
     const priorityBtn = createEl(
@@ -151,7 +150,7 @@ export function createForm() {
       id: "date",
     });
 
-    const prioritySelect = createPrioritySelect("medium"); // Default medium
+    const prioritySelect = createPrioritySelect("low"); // Default medium
 
     const closeBtn = createCloseButton(dialog);
     const addBtn = createSubmitButton("form-add-todo-submit", "Add ToDo");
@@ -459,22 +458,11 @@ export function createForm() {
 
       // Handle location change (only if it's a top-level todo or a project change is allowed for sub-todos)
       if (todoLocation !== newLocation && !projectSelect.disabled) {
-        // This logic is complex. Ideally, you have a user.moveTodo() method.
-        // user.moveTodo(todoId, todoLocation, newLocation, todoParentId);
-        //
-        // If not, the current approach of copying and deleting is okay but needs to be careful
-        // about sub-todos and ensuring all properties are transferred.
-        // The current way you're handling subTodos in your original logic (todo.getSubTodos().forEach(subTodo=>subTodo.updateLocation(newLocation));)
-        // is okay if you're keeping the same object references.
-        // However, if creating a 'copyTodo' means a *new* object graph, then those subTodos
-        // need to be *cloned* and re-parented as well. This is why a `moveTodo` in the user model is best.
-
-        // Placeholder for move logic assuming user.moveTodo is implemented
-        // user.moveTodo(todoId, todoLocation, newLocation); // Or pass full todo object
-        // If not using moveTodo, original logic:
+        //Future moveTodo function in createUser
         user.deleteTodo(todoId); // Delete from old project
         // Create a new todo object with the updated location, carrying over all properties and sub-todos
         // This requires your newTodo function to accept subTodos array directly for copying
+        getSubTodos().forEach(subTodo => subTodo.updateLocation(newLocation));
         const copyTodo = user.newTodo(
             newTitle, // Use potentially updated title
             newDescription, // Use potentially updated description
@@ -482,7 +470,7 @@ export function createForm() {
             newPriority, // Use potentially updated priority
             newLocation, // New location
             todoParentId, // Original parent ID
-            getSubTodos() // Pass existing sub-todos
+            getSubTodos(), // Pass existing sub-todos
         );
         // Need to add this copyTodo to the new project
         user.addToProject(copyTodo, newLocation); // Add to new project
@@ -573,7 +561,8 @@ export function createForm() {
     return form;
   };
 
-  const formRestore = (todoObjToRestore) => { // Accept the todo object directly
+  const formRestore = (todoId) => { // Accept the todo object directly
+    const todoObjToRestore = user.getHistory().getTodo(todoId);
     const warningIcon = createEl("i", {
       className: "fa-regular fa-circle-check",
     });
