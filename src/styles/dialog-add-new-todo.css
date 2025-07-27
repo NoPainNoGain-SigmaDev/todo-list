@@ -66,7 +66,6 @@ input[type="date"] {
   cursor: pointer;
   background-color: transparent;
   border-radius: 4px;
-  margin-left: 1rem;
   padding-left: 0.6rem;
 }
 .select-priority-low {
@@ -114,7 +113,6 @@ input[type="date"]:hover,
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  margin-left: 1rem;
 }
 .project-select option {
   max-width: 140px;
@@ -164,7 +162,11 @@ input[type="date"]:hover,
 #form-add-project-submit:hover {
   background-color: #b23a32;
 }
-
+.form-level-2 {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 1rem;
+}
 h3 {
   margin-top: 0.5rem;
   font-size: var(--font-size-regular);
@@ -202,6 +204,6 @@ h3 {
   flex-direction: row;
   justify-content: flex-end;
 }
-.form-top{
-    min-height: 100px;
+.form-top {
+  min-height: 100px;
 }
