@@ -359,13 +359,13 @@ export function createForm() {
     const level2 = createEl("fieldset", { className: "form-level-2" }, [
         dateInput,
         prioritySelect,
-        projectSelect,
-        parentTodoSelect || createEl("div"), // Render parent info or empty div
+        projectSelect, 
     ]);
 
 
     // Combined sub-todos section (list + add button)
     const subTodosSection = createEl("div", {className: "form-sub-todos-section"}, [
+        parentTodoSelect || createEl("div"), // Render parent info or empty div
         createEl("h3", {textContent: "Sub-todos"}),
         subTodosContainer,
         addNewSubTodoBtn,
