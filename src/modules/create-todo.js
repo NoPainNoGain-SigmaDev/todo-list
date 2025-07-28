@@ -60,6 +60,18 @@ export function createTodo({
     subTodos.splice(targetSubTodo, 1);
   };
 
+  const getSerializableData = () =>({
+    title : title,
+    description : description,
+    date : dueDate,
+    priority : priority,
+    location : location,
+    parent : parent,
+    id : id,
+    completed : completed,
+    subTodos : subTodos.map(subTodo=>subTodo.getSerializableData()),
+  });
+
   return {
     getTitle,
     updateTitle,
@@ -81,5 +93,6 @@ export function createTodo({
     getSubTodo,
     getParent,
     updateParent,
+    getSerializableData,
   };
 }

@@ -34,6 +34,12 @@ export function createProject(name = "ToDo List") {
     projectTodos.unshift(newTodo);
   };
 
+  const getSerializableData = () =>({
+    name : name,
+    id : id,
+    projectTodos : projectTodos.map(projectTodo=>projectTodo.getSerializableData()),
+  });
+
   return {
     getProjectName,
     getProjectContent,
@@ -44,5 +50,6 @@ export function createProject(name = "ToDo List") {
     getTodo,
     addToHistory,
     updateProjectName,
+    getSerializableData,
   };
 }
