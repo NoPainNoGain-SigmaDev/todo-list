@@ -402,6 +402,15 @@ export function createForm() {
 
     form.dataset.id = todoId;
 
+    //Disable all elements except the close button if in history
+    if(user.getHistory().getId() === user.getCurrentProjectId()){
+      const formElements = [...form];
+      formElements.forEach(formElement => {
+        if(formElement.id === "dialog-close")return;
+        formElement.disabled = true
+      });
+    }
+
     // --- Change Detection & Submit Button Enablement ---
     let editing = false;
     const checkChanges = () => {
