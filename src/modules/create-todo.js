@@ -29,6 +29,7 @@ export function createTodo({
   const getPriority = () => priority;
   const updatePriority = (newPriority) => (priority = newPriority);
   const getId = () => id;
+  const setId = (newId) => id = newId;
   const isCompleted = () => completed;
   const updateStatus = () => (completed = !isCompleted());
   const getLocation = () => location;
@@ -69,6 +70,7 @@ export function createTodo({
     getPriority,
     updatePriority,
     getId,
+    setId,
     isCompleted,
     updateStatus,
     getLocation,

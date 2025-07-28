@@ -16,6 +16,7 @@ export function createProject(name = "ToDo List") {
   const getProjectContent = () => projectTodos;
   const addTodo = (newTodo) => projectTodos.push(newTodo);
   const getId = () => id;
+  const setId = (newId) =>  id = newId;
   const removeTodo = (todoId) => {
     const targetTodo = projectTodos.findIndex(
       (todo) => todo.getId() === todoId
@@ -39,6 +40,7 @@ export function createProject(name = "ToDo List") {
     addTodo,
     removeTodo,
     getId,
+    setId,
     getTodo,
     addToHistory,
     updateProjectName,
