@@ -203,3 +203,24 @@
   font-weight: 800;
   color : var(--color-subtle);
 }
+
+@media screen and (max-width: 768px) {
+  /* Styles applied when the screen width is 768px or less (e.g., for mobile/tablet) */
+  #content{
+    width: 100vw;
+  }
+  .project-container{
+    width: 80%;
+  }
+  .delete{
+    display: block;
+    color: var(--color-separator)
+  }
+
+  #dialog,
+#dialog-level-2{
+  min-width: 100px;
+  width: auto;
+  max-width: 280px;
+}
+}

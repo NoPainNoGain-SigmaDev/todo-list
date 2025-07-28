@@ -10,6 +10,13 @@ const showSideBar = document.getElementById("show-side-bar");
 const sideBar = document.getElementById("side-bar");
 const content = document.getElementById("content");
 
+const mobileMediaQuery = window.matchMedia("(max-width: 768px)");
+if (mobileMediaQuery.matches) {
+  console.log("matches");
+  sideBar.classList.toggle("hidden");
+  showSideBar.classList.toggle("hidden");
+}
+
 collapseSideBar.addEventListener("click", () => {
   sideBar.classList.toggle("hidden");
   content.style.width = "100vw";
@@ -113,7 +120,14 @@ groceriesTodo.addSubTodo(
 
 // A simpler daily todo
 user.addToProject(
-  user.newTodo("Walk the dog 🐕", "", "2025-07-24", "medium", dailyTasksId, null),
+  user.newTodo(
+    "Walk the dog 🐕",
+    "",
+    "2025-07-24",
+    "medium",
+    dailyTasksId,
+    null
+  ),
   dailyTasksId
 );
 
@@ -261,42 +275,107 @@ outlineTodo.addSubTodo(
 // Sub-todo for drafting with fixed sub-sub-todos
 const draftTodo = user.newTodo(
   "Draft 500 words",
-  "",
+  "Breakdown into character development sections", // Added description
   "",
   "high",
   creativeId,
   novelWritingTodo.getId()
 );
 novelWritingTodo.addSubTodo(draftTodo);
-// Sub-sub-todos of draftTodo
-draftTodo.addSubTodo(
+
+// Sub-sub-todos for DraftTodo - focusing on content development
+let subSubTodo; // Declare once if not already global in scope
+
+// Sub-todo: Develop Sarah's backstory
+const backstoryTodo = user.newTodo(
+  "Develop Sarah's backstory",
+  "Focus on key formative events.",
+  "",
+  "medium", // Adjusted priority
+  creativeId,
+  draftTodo.getId()
+);
+draftTodo.addSubTodo(backstoryTodo);
+backstoryTodo.addSubTodo(
   user.newTodo(
-    "Min 200 words about her past",
+    "Brainstorm 3 pivotal past experiences",
     "",
     "",
     "low",
     creativeId,
-    draftTodo.getId()
+    backstoryTodo.getId()
   )
 );
-draftTodo.addSubTodo(
+backstoryTodo.addSubTodo(
   user.newTodo(
-    "Max 150 words about her family",
+    "Draft scene or paragraph introducing her core motivation",
     "",
     "",
-    "low",
+    "medium",
     creativeId,
-    draftTodo.getId()
+    backstoryTodo.getId()
   )
 );
-draftTodo.addSubTodo(
+
+// Sub-todo: Integrate family dynamics
+const familyDynamicsTodo = user.newTodo(
+  "Integrate family dynamics",
+  "Show, don't just tell, relationships.",
+  "",
+  "medium", // Adjusted priority
+  creativeId,
+  draftTodo.getId()
+);
+draftTodo.addSubTodo(familyDynamicsTodo);
+familyDynamicsTodo.addSubTodo(
   user.newTodo(
-    "Min 150 words about her feelings",
+    "Identify Sarah's relationship with specific family members",
     "",
     "",
     "low",
     creativeId,
-    draftTodo.getId()
+    familyDynamicsTodo.getId()
+  )
+);
+familyDynamicsTodo.addSubTodo(
+  user.newTodo(
+    "Write dialogue or interaction reflecting family impact",
+    "",
+    "",
+    "medium",
+    creativeId,
+    familyDynamicsTodo.getId()
+  )
+);
+
+// Sub-todo: Explore emotional landscape
+const emotionalLandscapeTodo = user.newTodo(
+  "Explore emotional landscape",
+  "Convey internal conflict or growth.",
+  "",
+  "medium", // Adjusted priority
+  creativeId,
+  draftTodo.getId()
+);
+draftTodo.addSubTodo(emotionalLandscapeTodo);
+emotionalLandscapeTodo.addSubTodo(
+  user.newTodo(
+    "Pinpoint a moment of emotional vulnerability",
+    "",
+    "",
+    "low",
+    creativeId,
+    emotionalLandscapeTodo.getId()
+  )
+);
+emotionalLandscapeTodo.addSubTodo(
+  user.newTodo(
+    "Describe Sarah's reaction and internal monologue",
+    "",
+    "",
+    "medium",
+    creativeId,
+    emotionalLandscapeTodo.getId()
   )
 );
 

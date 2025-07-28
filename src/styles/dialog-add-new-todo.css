@@ -207,3 +207,13 @@ h3 {
 .form-top {
   min-height: 100px;
 }
+
+@media screen and (max-width: 768px) {
+  /* Styles applied when the screen width is 768px or less (e.g., for mobile/tablet) */
+  #dialog,
+  #dialog-level-2 {
+    min-width: 400px;
+    width: auto;
+    max-width: 90%;
+  }
+}
