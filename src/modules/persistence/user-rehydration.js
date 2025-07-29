@@ -45,5 +45,7 @@ export const reconstructUserData = (parsedUserData) => {
   if(parsedUserData.history){
     user.setHistory(reconstructProject(parsedUserData.history));
   }
+  //reset current project
+  user.updateCurrentProjectId(user.getProjects()[0].getId());
   return user;
 };
