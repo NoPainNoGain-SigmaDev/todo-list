@@ -18,7 +18,7 @@ export function createTodo({
       ).toString(16)
     );
   }
-  const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
+  let id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
 
   const getTitle = () => title;
   const updateTitle = (newTitle) => (title = newTitle);

@@ -9,7 +9,7 @@ export function createProject(name = "ToDo List") {
       ).toString(16)
     );
   }
-  const id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
+  let id = crypto.randomUUID ? crypto.randomUUID() : generateUUID();
 
   const getProjectName = () => name;
   const updateProjectName = (newProjectName) => (name = newProjectName);
