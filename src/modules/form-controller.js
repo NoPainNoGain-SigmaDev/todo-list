@@ -1,5 +1,6 @@
 import { createEl, autoResize, closeDialog, clear } from "./dom-tools.js";
 import { user } from "../index.js"; // user must have newTodo, getProjects, getProject, etc.
+import { saveUserData } from "./persistence/local-storage-utils.js";
 
 export function createForm() {
   const dialog = document.getElementById("dialog"); // Main dialog
@@ -258,6 +259,7 @@ export function createForm() {
         // It's a top-level todo, add to the selected project
         user.getProject(todoLocationId).addTodo(newTodo);
       }
+      saveUserData(user);
       dialog.close("submit"); // Pass a return value to indicate successful submission
     });
 
@@ -300,6 +302,7 @@ export function createForm() {
         return;
       }
       user.newProject(newProjectName);
+      saveUserData(user);
       dialog.close("submit");
     });
 
@@ -537,6 +540,7 @@ export function createForm() {
         // If it was a sub-todo that moved, its parent's subTodos array also needs to be updated.
         // This complexity is why user.moveTodo is a good idea.
       }
+      saveUserData(user);
       dialog.close("update"); // Indicate successful update
     });
 
@@ -614,6 +618,7 @@ export function createForm() {
         // Fallback if currentProjectObject isn't reliable, but should be from screenController
         user.deleteTodo(todoId); // Requires a global search in user.js
       }
+      saveUserData(user);
       dialog.close("delete"); // Indicate successful deletion
     });
 
@@ -689,7 +694,7 @@ export function createForm() {
 
       // Optionally remove from history if that's desired behavior after restore
       // user.getHistory().removeTodo(todoObjToRestore.getId()); // You might need this method
-
+      saveUserData(user);
       dialogSecondary.close();
       dialog.close("restore"); // Signal main dialog to close and update
     });
@@ -733,6 +738,7 @@ export function createForm() {
         user.newProject("Things ToDo 📋"); // Recreate with default name and emoji
       }
       user.deleteProject(projectId);
+      saveUserData(user);
       dialog.close("deleteProject"); // Indicate successful deletion
     });
 

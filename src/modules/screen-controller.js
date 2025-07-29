@@ -1,6 +1,7 @@
 import { dialogController } from "./dialog-controller";
 import { createEl, clear, autoResize } from "./dom-tools";
 import { user } from "../index.js"; // Ensure user has getCurrentProjectId and updateCurrentProjectId
+import { saveUserData } from "./persistence/local-storage-utils.js";
 
 export function screenController() {
   const dialogCont = dialogController();
@@ -295,6 +296,7 @@ export function screenController() {
         if(currentlyHistory)return;
         user.addToHistory(todoObj);
         user.deleteTodo(todoId);
+        saveUserData(user);
         updateProjectContent(currentProjectObject);
         return;
       }
