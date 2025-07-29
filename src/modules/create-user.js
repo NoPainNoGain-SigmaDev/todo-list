@@ -110,6 +110,7 @@ export function createUser(name = "SCRUM MAISTER") {
   const getSerializableData = () =>({
     userName : name,
     projects : projects.map(project=>project.getSerializableData()),
+    history : history.getSerializableData(),
   });
   return {
     getProjects,
