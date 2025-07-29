@@ -240,6 +240,7 @@ export function screenController() {
       if (projectTitle.value !== project.getProjectName()) {
         project.updateProjectName(projectTitle.value);
         updateProjectNav(); // Re-render nav to show new name
+        saveUserData(user);
         // The display will be updated by setCurrentProjectDisplay after updateProjectNav
       }
     });
@@ -387,6 +388,7 @@ export function screenController() {
   username.addEventListener("change", () => {
     if (username.value !== user.userName()) {
       user.newUserName(username.value);
+      saveUserData(user);
     }
   });
 
