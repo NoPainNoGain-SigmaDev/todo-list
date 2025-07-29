@@ -17,4 +17,11 @@ const reconstructTodo = (todoData) => {
     }
     return todo;
 }
-
+const reconstructProject = (projectData) => {
+    const project = createProject(projectData.name);
+    project.setId(projectData.id);
+    if(projectData.projectTodos && projectData.projectTodos.length > 0){
+        projectData.projectTodos.forEach(projectTodoData => project.addTodo(reconstructTodo(projectTodoData)));
+    }
+    return project;
+}
