@@ -107,6 +107,9 @@ export function createUser(name = "SCRUM MAISTER") {
     console.log(JSON.stringify(userData, null, 2));
   };
 
+  const clearHistory = () => history = [];
+  const clearProjects = () => projects = [];
+
   const getSerializableData = () =>({
     userName : name,
     projects : projects.map(project=>project.getSerializableData()),
@@ -131,5 +134,7 @@ export function createUser(name = "SCRUM MAISTER") {
     getTodo,
     deleteTodo,
     getSerializableData,
+    clearHistory,
+    clearProjects,
   };
 }
