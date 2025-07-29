@@ -51,6 +51,7 @@ export function createUser(name = "SCRUM MAISTER") {
   };
   //history
   const getHistory = () => history;
+  const setHistory = (newHistory) => history = newHistory;
   const addToHistory = (todo) => history.addToHistory(todo);
   //subTodos
   const addSubTodo = (subTodo, todoId, projectId) => {
@@ -127,6 +128,7 @@ export function createUser(name = "SCRUM MAISTER") {
     deleteProject,
     self,
     getHistory,
+    setHistory,
     addToHistory,
     newUserName,
     addSubTodo,
