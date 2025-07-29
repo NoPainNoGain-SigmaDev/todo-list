@@ -398,7 +398,9 @@ export function screenController() {
   if (!user.getCurrentProjectId()) {
     user.updateCurrentProjectId(user.getProjects()[0].getId());
   }
-
+  if(user.userName() !== ""){
+    username.value = user.userName();
+  }
   updateProjectNav(); // Render project navigation initially
   setCurrentProjectDisplay(); // Set the visual selection based on currentProjectId
   updateProjectContent(getCurrentProjectObject()); // Load content for the initial selected project

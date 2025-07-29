@@ -1,7 +1,7 @@
 import { createProject } from "./create-project";
 import { createTodo } from "./create-todo";
 
-export function createUser(name = "SCRUM MAISTER") {
+export function createUser(name = "") {
   let projects = []; //collection of projects
   let history = createProject("History"); //collection al completed todos
   const defaultProject = createProject("Things ToDo 📋");
