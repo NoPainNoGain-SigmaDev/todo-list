@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Things ToDo - Todo List</title>
+  <script defer src="main.js"></script></head>
+  <body>
+    <div id="side-bar">
+      <nav>
+        <div class="nav-header">
+          <div class="user">
+            <div class="user-pp"></div>
+            <input id="username" type="text" placeholder="Your Username" />
+          </div>
+          <button id="collapse-side-bar" class="hover-effect">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M19 4.001H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-12a2 2 0 0 0-2-2m-15 2a1 1 0 0 1 1-1h4v14H5a1 1 0 0 1-1-1zm6 13h9a1 1 0 0 0 1-1v-12a1 1 0 0 0-1-1h-9z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <!-- Add new task and new project -->
+        <div class="nav-utilities">
+          <button id="add-new-todo" class="hover-effect">
+            <i class="fa-solid fa-circle-plus"></i>
+            <h2>Add new ToDo</h2>
+          </button>
+          <button id="add-new-project" class="hover-effect">
+            <i class="fa-solid fa-folder-plus"></i>
+            <h2>New Project</h2>
+          </button>
+          <button id="history" class="hover-effect">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <h2>History</h2>
+          </button>
+        </div>
+        <!-- Here goes the nav of projects -->
+        <h2 class="content-title">My Projects</h2>
+        <div id="nav-content"></div>
+      </nav>
+      <p class="author">
+        Built with sweat by
+        <a href="https://github.com/NoPainNoGain-SigmaDev/" target="_blank"
+          >@NoPainNoGain-SigmaDev</a
+        >
+      </p>
+    </div>
+    <button id="show-side-bar" class="hover-effect show-side-bar hidden">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          fill="currentColor"
+          fill-rule="evenodd"
+          d="M19 4.001H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-12a2 2 0 0 0-2-2m-15 2a1 1 0 0 1 1-1h4v14H5a1 1 0 0 1-1-1zm6 13h9a1 1 0 0 0 1-1v-12a1 1 0 0 0-1-1h-9z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+    </button>
+    <!-- Here goes the content to be displayed when a project is selected -->
+    <div id="content"></div>
+    <!-- Dialog container -->
+    <dialog id="dialog"></dialog>
+    <dialog id="dialog-level-2"></dialog>
+  </body>
+</html>
