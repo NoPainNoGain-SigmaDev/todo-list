@@ -18,7 +18,7 @@
   /* Date Colors - New Additions */
   --color-date-today: #246fe0; /* Keep the existing blue for "Today" (from --color-text-date) */
   --color-date-tomorrow: #4caf50; /* A fresh green for "Tomorrow" (suggests upcoming/fresh) */
-  --color-date-yesterday: #ffc107; /* A warm orange/amber for "Yesterday" (a warning, but not critical) */
+  --color-date-yesterday: #D48800; /* A warm orange/amber for "Yesterday" (a warning, but not critical) */
   --color-date-this-week: #607d8b; /* A neutral, soft blue-gray for "This Week" (calm, planned) */
   --color-date-future-this-year: #555555; /* A standard dark grey (from --color-text-secondary) for "Future (This Year)" (standard text) */
   --color-date-future-other-year: #555555; /* Same as above, standard text */
