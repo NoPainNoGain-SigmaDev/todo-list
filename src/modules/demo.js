@@ -1,35 +1,52 @@
 export const loadDemo = (user) => {
   //DEMO
-  // New Projects
-  // projects[0] is "Things ToDo" by default
-  user.newProject("Daily Tasks 🗓️");
-  user.newProject("Quick Runs 🏃");
-  user.newProject("Creative 🎨");
+  /**
+   * Generates a date string in YYYY-MM-DD format relative to the current date.
+   * @param {number} offsetDays - Number of days to offset from today (0 for today, 1 for tomorrow, etc.).
+   * @returns {string} The formatted date string.
+   */
+  function getDynamicDate(offsetDays = 0) {
+    const date = new Date();
+    date.setDate(date.getDate() + offsetDays); // Add the offset days
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed, so add 1
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  // Ensure user model handles new projects properly if they don't exist
+  // User should be initialized with 'Things ToDo' as projects[0] by default.
+  // Adding projects explicitly.
+
+  user.newProject("Daily Grind 🏋️"); // Renamed and new emoji
+  user.newProject("Learn Code 💻"); // New project for Odin Project
+  user.newProject("Watchlist 🍿"); // New project for media
+  user.newProject("Creative 🎨"); // Existing, kept
 
   const projects = user.getProjects();
-  const thingsToDoId = projects[0].getId();
-  const dailyTasksId = projects[1].getId();
-  const quickRunsId = projects[2].getId();
-  const creativeId = projects[3].getId();
+  const thingsToDoId = projects[0].getId(); // Default project
+  const dailyGrindId = projects[1].getId(); // Updated ID variable
+  const learnCodeId = projects[2].getId(); // New ID variable
+  const watchlistId = projects[3].getId(); // New ID variable
+  const creativeId = projects[4].getId(); // Updated ID variable
 
-  // --- Things ToDo (Default) ---
-  // All todos here belong to 'thingsToDoId' project
+  // --- Things ToDo 📋 (Default Project) ---
   user.addToProject(
     user.newTodo(
-      "Pay bills 💸",
-      "Check utilities and credit cards",
-      "2025-07-28",
+      "Pay Utility Bills 💸",
+      "Check electric, water, and internet bills. Set up autopay for next month.",
+      getDynamicDate(0), // Date: Today (1/3)
       "high",
-      thingsToDoId, // location: project ID
-      null // parent: no parent
+      thingsToDoId,
+      null
     ),
     thingsToDoId
   );
   user.addToProject(
     user.newTodo(
-      "Schedule dentist appointment",
-      "",
-      "",
+      "Schedule Dentist Appointment",
+      "Call Dr. Smith's office to book a cleaning for next quarter.",
+      "", // No specific date
       "medium",
       thingsToDoId,
       null
@@ -37,209 +54,385 @@ export const loadDemo = (user) => {
     thingsToDoId
   );
   user.addToProject(
-    user.newTodo("Call mom", "", "", "low", thingsToDoId, null),
-    thingsToDoId
-  );
-  user.addToProject(
     user.newTodo(
-      "Research new laptop 💻",
-      "Look at reviews for MacBook Air vs. Dell XPS",
-      "2025-08-01",
+      "Reply to Sarah's Email",
+      "Regarding weekend plans and proposal feedback.",
+      getDynamicDate(0), // Date: Today (2/3)
       "medium",
       thingsToDoId,
       null
     ),
     thingsToDoId
   );
-
-  // --- Daily Tasks ---
-  // All todos here belong to 'dailyTasksId' project
-  const groceriesTodo = user.newTodo(
-    "Grocery Shopping 🛒",
-    "Plan meals for the week and buy ingredients",
-    "2025-07-2025",
-    "high",
-    dailyTasksId, // location: project ID
-    null
-  );
-  user.addToProject(groceriesTodo, dailyTasksId);
-  // Sub-todos of groceriesTodo
-  groceriesTodo.addSubTodo(
-    user.newTodo("Milk", "", "", "low", dailyTasksId, groceriesTodo.getId())
-  ); // location: project ID, parent: parent todo ID
-  groceriesTodo.addSubTodo(
-    user.newTodo("Eggs", "", "", "low", dailyTasksId, groceriesTodo.getId())
-  );
-  groceriesTodo.addSubTodo(
-    user.newTodo("Bread", "", "", "low", dailyTasksId, groceriesTodo.getId())
-  );
-  groceriesTodo.addSubTodo(
-    user.newTodo(
-      "Chicken",
-      "",
-      "",
-      "medium",
-      dailyTasksId,
-      groceriesTodo.getId()
-    )
-  );
-  groceriesTodo.addSubTodo(
-    user.newTodo(
-      "Vegetables",
-      "",
-      "",
-      "medium",
-      dailyTasksId,
-      groceriesTodo.getId()
-    )
-  );
-
-  // A simpler daily todo
   user.addToProject(
     user.newTodo(
-      "Walk the dog 🐕",
-      "",
-      "2025-07-24",
-      "medium",
-      dailyTasksId,
+      "Research New Recipe",
+      "Look for a healthy chicken stir-fry recipe with fresh vegetables.",
+      "", // No specific date
+      "low",
+      thingsToDoId,
       null
     ),
-    dailyTasksId
+    thingsToDoId
+  );
+  user.addToProject(
+    user.newTodo(
+      "Update Software on PC 💻",
+      "Check for pending updates for OS, browser, and antivirus software.",
+      getDynamicDate(10), // Date: Future (1/3)
+      "low",
+      thingsToDoId,
+      null
+    ),
+    thingsToDoId
   );
 
-  // Another todo with sub-todos, but fewer details on the main todo, acting like a checklist
+  // --- Daily Grind 🏋️ ---
   const morningRoutineTodo = user.newTodo(
-    "Morning Routine Checklist",
-    "",
-    "",
-    "medium",
-    dailyTasksId,
+    "Complete Morning Routine",
+    "Ensure all morning habits are checked off.",
+    getDynamicDate(0), // Date: Today (3/3)
+    "high",
+    dailyGrindId,
     null
   );
-  user.addToProject(morningRoutineTodo, dailyTasksId);
-  // Sub-todos of morningRoutineTodo
+  user.addToProject(morningRoutineTodo, dailyGrindId);
   morningRoutineTodo.addSubTodo(
     user.newTodo(
       "Make bed",
       "",
       "",
       "low",
-      dailyTasksId,
+      dailyGrindId,
       morningRoutineTodo.getId()
     )
   );
   morningRoutineTodo.addSubTodo(
     user.newTodo(
-      "Brush teeth",
+      "Brush teeth & Floss",
       "",
       "",
       "low",
-      dailyTasksId,
+      dailyGrindId,
       morningRoutineTodo.getId()
     )
   );
   morningRoutineTodo.addSubTodo(
     user.newTodo(
-      "Have breakfast",
+      "Hydrate (2 glasses water)",
       "",
       "",
       "low",
-      dailyTasksId,
+      dailyGrindId,
+      morningRoutineTodo.getId()
+    )
+  );
+  morningRoutineTodo.addSubTodo(
+    user.newTodo(
+      "Quick Stretch",
+      "",
+      "",
+      "low",
+      dailyGrindId,
       morningRoutineTodo.getId()
     )
   );
 
-  // --- Quick Runs ---
-  // All todos here belong to 'quickRunsId' project
-  const bankVisitTodo = user.newTodo(
-    "Bank Visit 🏦",
-    "Deposit check and update address",
-    "2025-07-26",
+  const workoutTodo = user.newTodo(
+    "Evening Workout - Full Body Strength",
+    "Follow the gym routine focusing on major muscle groups.",
+    getDynamicDate(1), // Date: Tomorrow (1/2)
     "high",
-    quickRunsId, // location: project ID
+    dailyGrindId,
     null
   );
-  user.addToProject(bankVisitTodo, quickRunsId);
-  // Sub-todos of bankVisitTodo
-  bankVisitTodo.addSubTodo(
+  user.addToProject(workoutTodo, dailyGrindId);
+  // Sub-todos for workout
+  const squatsTodo = user.newTodo(
+    "Squats",
+    "3 sets of 8-10 reps. Focus on form.",
+    "",
+    "medium",
+    dailyGrindId,
+    workoutTodo.getId()
+  );
+  workoutTodo.addSubTodo(squatsTodo);
+  squatsTodo.addSubTodo(
     user.newTodo(
-      "Gather documents",
-      "Bank statements, ID",
+      "Warm-up set (empty bar)",
+      "",
+      "",
+      "low",
+      dailyGrindId,
+      squatsTodo.getId()
+    )
+  );
+  squatsTodo.addSubTodo(
+    user.newTodo(
+      "Set 1: 135 lbs",
+      "",
       "",
       "medium",
-      quickRunsId,
-      bankVisitTodo.getId()
+      dailyGrindId,
+      squatsTodo.getId()
     )
   );
-  bankVisitTodo.addSubTodo(
+  squatsTodo.addSubTodo(
     user.newTodo(
-      "Check bank hours",
+      "Set 2: 155 lbs",
+      "",
+      "",
+      "medium",
+      dailyGrindId,
+      squatsTodo.getId()
+    )
+  );
+  squatsTodo.addSubTodo(
+    user.newTodo(
+      "Set 3: 165 lbs",
+      "",
+      "",
+      "high",
+      dailyGrindId,
+      squatsTodo.getId()
+    )
+  );
+
+  workoutTodo.addSubTodo(
+    user.newTodo(
+      "Bench Press",
+      "3 sets of 8-10 reps.",
+      "",
+      "medium",
+      dailyGrindId,
+      workoutTodo.getId()
+    )
+  );
+  workoutTodo.addSubTodo(
+    user.newTodo(
+      "Rows",
+      "3 sets of 10-12 reps. Use incline bench.",
+      "",
+      "medium",
+      dailyGrindId,
+      workoutTodo.getId()
+    )
+  );
+  workoutTodo.addSubTodo(
+    user.newTodo(
+      "Overhead Press",
+      "3 sets of 8-10 reps.",
+      "",
+      "medium",
+      dailyGrindId,
+      workoutTodo.getId()
+    )
+  );
+
+  user.addToProject(
+    user.newTodo(
+      "Plan Tomorrow's Meals",
+      "Prep breakfast and lunch to save time.",
+      "",
+      "low",
+      dailyGrindId,
+      null
+    ),
+    dailyGrindId
+  );
+
+  // --- Learn Code 💻 (Odin Project Focus) ---
+  const odinProjectTodo = user.newTodo(
+    "Odin Project: JavaScript Fundamentals",
+    "Work through the 'DOM Manipulation' section and complete practice exercises.",
+    getDynamicDate(3), // Date: Future (2/3)
+    "high",
+    learnCodeId,
+    null
+  );
+  user.addToProject(odinProjectTodo, learnCodeId);
+
+  const domManipulationTodo = user.newTodo(
+    "Read DOM Manipulation Chapter",
+    "Focus on event bubbling and delegation.",
+    "",
+    "medium",
+    learnCodeId,
+    odinProjectTodo.getId()
+  );
+  odinProjectTodo.addSubTodo(domManipulationTodo);
+
+  const practiceProjectTodo = user.newTodo(
+    "Build Etch-A-Sketch Project",
+    "Implement drawing functionality and reset button.",
+    getDynamicDate(5),
+    "high",
+    learnCodeId,
+    odinProjectTodo.getId()
+  );
+  odinProjectTodo.addSubTodo(practiceProjectTodo);
+  practiceProjectTodo.addSubTodo(
+    user.newTodo(
+      "Setup HTML/CSS structure",
       "",
       "",
       "low",
-      quickRunsId,
-      bankVisitTodo.getId()
+      learnCodeId,
+      practiceProjectTodo.getId()
     )
   );
-  bankVisitTodo.addSubTodo(
+  practiceProjectTodo.addSubTodo(
     user.newTodo(
-      "Find parking",
+      "Implement drawing logic (mouseover events)",
+      "",
+      "",
+      "medium",
+      learnCodeId,
+      practiceProjectTodo.getId()
+    )
+  );
+  practiceProjectTodo.addSubTodo(
+    user.newTodo(
+      "Add clear grid button",
+      "",
+      "",
+      "medium",
+      learnCodeId,
+      practiceProjectTodo.getId()
+    )
+  );
+  practiceProjectTodo.addSubTodo(
+    user.newTodo(
+      "Review Odin Project solution for comparison",
       "",
       "",
       "low",
-      quickRunsId,
-      bankVisitTodo.getId()
+      learnCodeId,
+      practiceProjectTodo.getId()
     )
   );
 
-  // A simple title-only quick run
   user.addToProject(
-    user.newTodo("Pick up dry cleaning", "", "", "low", quickRunsId, null),
-    quickRunsId
+    user.newTodo(
+      "Study Async JavaScript",
+      "Review Promises, async/await syntax.",
+      "",
+      "medium",
+      learnCodeId,
+      null
+    ),
+    learnCodeId
+  );
+  user.addToProject(
+    user.newTodo(
+      "LeetCode Daily Challenge",
+      "Solve today's easy/medium problem.",
+      getDynamicDate(0),
+      "low",
+      learnCodeId,
+      null
+    ),
+    learnCodeId
   );
 
-  // Another simple quick run
-  user.addToProject(
-    user.newTodo("Mail package 📦", "", "", "medium", quickRunsId, null),
-    quickRunsId
+  // --- Watchlist 🍿 ---
+  const animeSeriesTodo = user.newTodo(
+    "Start 'Frieren: Beyond Journey's End'",
+    "Watch the first few episodes, heard great things!",
+    getDynamicDate(1), // Date: Tomorrow (2/2)
+    "medium",
+    watchlistId,
+    null
+  );
+  user.addToProject(animeSeriesTodo, watchlistId);
+  animeSeriesTodo.addSubTodo(
+    user.newTodo(
+      "Episode 1: The End of the Journey and the Beginning",
+      "",
+      "",
+      "low",
+      watchlistId,
+      animeSeriesTodo.getId()
+    )
+  );
+  animeSeriesTodo.addSubTodo(
+    user.newTodo(
+      "Episode 2: It Didn't Have To Be...",
+      "",
+      "",
+      "low",
+      watchlistId,
+      animeSeriesTodo.getId()
+    )
+  );
+  animeSeriesTodo.addSubTodo(
+    user.newTodo(
+      "Episode 3: The True Hero's Journey",
+      "",
+      "",
+      "low",
+      watchlistId,
+      animeSeriesTodo.getId()
+    )
   );
 
-  // --- Creative ---
-  // All todos here belong to 'creativeId' project
+  user.addToProject(
+    user.newTodo(
+      "Watch 'Dune: Part Two'",
+      "Finally get around to seeing it on streaming service.",
+      getDynamicDate(7), // Date: Future (3/3)
+      "high",
+      watchlistId,
+      null
+    ),
+    watchlistId
+  );
+
+  user.addToProject(
+    user.newTodo(
+      "Re-watch 'Spirited Away'",
+      "A classic Studio Ghibli film, always a good re-watch.",
+      "",
+      "low",
+      watchlistId,
+      null
+    ),
+    watchlistId
+  );
+
+  // --- Creative 🎨 (Original content with refinement) ---
   const novelWritingTodo = user.newTodo(
     "Write Novel Chapter 3 ✍️",
-    "Focus on character development for Sarah",
-    "2025-08-10",
+    "Focus on character development for Sarah. Target ~500 words.",
+    "", // Removed date, main sections have dates
     "high",
-    creativeId, // location: project ID
+    creativeId,
     null
   );
   user.addToProject(novelWritingTodo, creativeId);
 
-  // Sub-todo for outlining
   const outlineTodo = user.newTodo(
-    "Outline plot points",
-    "",
+    "Outline plot points for Chapter 3",
+    "Ensure major beats and character decisions are clear.",
     "",
     "medium",
     creativeId,
     novelWritingTodo.getId()
-  ); // location: project ID, parent: parent todo ID
+  );
   novelWritingTodo.addSubTodo(outlineTodo);
-  // Sub-sub-todos of outlineTodo
   outlineTodo.addSubTodo(
     user.newTodo(
-      "Chapter summary (1-2 sentences)",
+      "Draft scene summary (1-2 sentences per section)",
       "",
       "",
       "low",
       creativeId,
       outlineTodo.getId()
     )
-  ); // location: project ID, parent: parent sub-todo ID
+  );
   outlineTodo.addSubTodo(
     user.newTodo(
-      "Key character arcs",
+      "Identify key character arcs and emotional shifts for chapter",
       "",
       "",
       "medium",
@@ -248,26 +441,21 @@ export const loadDemo = (user) => {
     )
   );
 
-  // Sub-todo for drafting with fixed sub-sub-todos
   const draftTodo = user.newTodo(
-    "Draft 500 words",
-    "Breakdown into character development sections", // Added description
-    "",
+    "Draft Chapter 3 Content (~500 words)",
+    "Breakdown into character development sections.",
+    getDynamicDate(25), // Date: Future (This is the 3rd future date)
     "high",
     creativeId,
     novelWritingTodo.getId()
   );
   novelWritingTodo.addSubTodo(draftTodo);
 
-  // Sub-sub-todos for DraftTodo - focusing on content development
-  let subSubTodo; // Declare once if not already global in scope
-
-  // Sub-todo: Develop Sarah's backstory
   const backstoryTodo = user.newTodo(
     "Develop Sarah's backstory",
     "Focus on key formative events.",
-    "",
-    "medium", // Adjusted priority
+    "", // Removed date
+    "medium",
     creativeId,
     draftTodo.getId()
   );
@@ -293,12 +481,11 @@ export const loadDemo = (user) => {
     )
   );
 
-  // Sub-todo: Integrate family dynamics
   const familyDynamicsTodo = user.newTodo(
     "Integrate family dynamics",
     "Show, don't just tell, relationships.",
     "",
-    "medium", // Adjusted priority
+    "medium",
     creativeId,
     draftTodo.getId()
   );
@@ -324,41 +511,9 @@ export const loadDemo = (user) => {
     )
   );
 
-  // Sub-todo: Explore emotional landscape
-  const emotionalLandscapeTodo = user.newTodo(
-    "Explore emotional landscape",
-    "Convey internal conflict or growth.",
-    "",
-    "medium", // Adjusted priority
-    creativeId,
-    draftTodo.getId()
-  );
-  draftTodo.addSubTodo(emotionalLandscapeTodo);
-  emotionalLandscapeTodo.addSubTodo(
+  user.addToProject(
     user.newTodo(
-      "Pinpoint a moment of emotional vulnerability",
-      "",
-      "",
-      "low",
-      creativeId,
-      emotionalLandscapeTodo.getId()
-    )
-  );
-  emotionalLandscapeTodo.addSubTodo(
-    user.newTodo(
-      "Describe Sarah's reaction and internal monologue",
-      "",
-      "",
-      "medium",
-      creativeId,
-      emotionalLandscapeTodo.getId()
-    )
-  );
-
-  // Another sub-todo of novelWritingTodo
-  novelWritingTodo.addSubTodo(
-    user.newTodo(
-      "Review previous chapter",
+      "Review Chapter 2 (for consistency)",
       "",
       "",
       "low",
@@ -367,51 +522,42 @@ export const loadDemo = (user) => {
     )
   );
 
-  // A todo with just a title and priority for brainstorming
-  user.addToProject(
-    user.newTodo("Brainstorm new ideas 💡", "", "", "low", creativeId, null),
-    creativeId
-  );
-
-  // Another detailed todo for a skill-based project
-  const guitarTodo = user.newTodo(
-    "Learn new guitar riff 🎸",
-    "Practice 'Stairway to Heaven' solo",
-    "2025-07-30",
+  const guitarPracticeTodo = user.newTodo(
+    "Guitar Practice: New Song",
+    "Learn 'Stairway to Heaven' solo, focusing on rhythm and lead sections.",
+    "", // No specific date
     "medium",
-    creativeId, // location: project ID
+    creativeId,
     null
   );
-  user.addToProject(guitarTodo, creativeId);
-  // Adding a sub-todo with sub-sub-todos
-  const section1Todo = user.newTodo(
+  user.addToProject(guitarPracticeTodo, creativeId);
+  const section1GuitarTodo = user.newTodo(
     "Master Section 1 (0:00-0:30)",
-    "",
-    "",
+    "Focus on accurate finger placement and clear notes.",
+    "", // No specific date
     "high",
-    creativeId, // location: project ID
-    guitarTodo.getId() // parent: parent todo ID
+    creativeId,
+    guitarPracticeTodo.getId()
   );
-  guitarTodo.addSubTodo(section1Todo);
-  // Sub-sub-todos of section1Todo
-  section1Todo.addSubTodo(
+  guitarPracticeTodo.addSubTodo(section1GuitarTodo);
+  section1GuitarTodo.addSubTodo(
     user.newTodo(
       "Practice scales D minor pentatonic",
       "",
       "",
       "medium",
       creativeId,
-      section1Todo.getId()
+      section1GuitarTodo.getId()
     )
-  ); // location: project ID, parent: parent sub-todo ID
-  section1Todo.addSubTodo(
+  );
+  section1GuitarTodo.addSubTodo(
     user.newTodo(
       "Slow tempo drill (60 bpm)",
       "",
       "",
       "low",
       creativeId,
-      section1Todo.getId()
+      section1GuitarTodo.getId()
     )
   );
   //End demo
