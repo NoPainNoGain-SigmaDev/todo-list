@@ -1,6 +1,15 @@
 import { createEl, autoResize, closeDialog, clear } from "./dom-tools.js";
 import { user } from "../index.js"; // user must have newTodo, getProjects, getProject, etc.
 import { saveUserData } from "./persistence/local-storage-utils.js";
+//Date format
+import {
+  isTomorrow,
+  isToday,
+  isThisYear,
+  format,
+  getDay,
+  isThisWeek,
+} from "date-fns";
 
 export function createForm() {
   const dialog = document.getElementById("dialog"); // Main dialog
@@ -113,12 +122,42 @@ export function createForm() {
     const formDisplayBottomRowContent = [];
     // Display date if available
     if (todo.getDueDate().trim() !== "") {
+      let formatedDate = "";
+      let date = [...todo.getDueDate()];
+      if (date[5] === "0") date.splice(5, 1);
+      date = date.join("");
+
+      const days = {
+        0: "Sunday",
+        1: "Monday",
+        2: "Tuesday",
+        3: "Wednesday",
+        4: "Thursday",
+        5: "Friday",
+        6: "Saturday",
+      };
+
+      if (isToday(new Date(date))) {
+        formatedDate = "Today";
+      } else if (isTomorrow(new Date(date))) {
+        formatedDate = "Tomorrow";
+      } else {
+        if (!isThisYear(new Date(date))) {
+          formatedDate = format(new Date(date), "MMM dd yyyy");
+        } else {
+          if (isThisWeek(new Date(date))) {
+            formatedDate = days[getDay(new Date(date))];
+          } else {
+            formatedDate = format(new Date(date), "MMM dd");
+          }
+        }
+      }
       formDisplayBottomRowContent.push(
         createEl("div", { className: "date-container" }, [
           createEl("i", { className: "fa-regular fa-calendar-minus" }),
           createEl("p", {
             className: "date",
-            textContent: todo.getDueDate(),
+            textContent: formatedDate,
           }),
         ])
       );
