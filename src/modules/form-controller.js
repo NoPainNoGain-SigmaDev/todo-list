@@ -137,23 +137,40 @@ export function createForm() {
         6: "Saturday",
       };
 
-      if (isToday(new Date(date))) {
+      const todoDate = new Date(date); // Create the Date object ONCE
+      let dateClassName = "date-container";
+
+      if (isToday(todoDate)) {
         formatedDate = "Today";
-      } else if (isTomorrow(new Date(date))) {
+        dateClassName += " date-today";
+      } else if (isTomorrow(todoDate)) {
         formatedDate = "Tomorrow";
+        dateClassName += " date-tomorrow";
+      } else if (isYesterday(todoDate)) {
+        formatedDate = "Yesterday";
+        dateClassName += " date-yesterday";
+      } else if (isPast(todoDate) && isThisYear(todoDate)) {
+        formatedDate = format(todoDate, "MMM dd");
+        dateClassName += " date-past-this-year";
       } else {
-        if (!isThisYear(new Date(date))) {
-          formatedDate = format(new Date(date), "MMM dd yyyy");
-        } else {
-          if (isThisWeek(new Date(date))) {
-            formatedDate = days[getDay(new Date(date))];
+        if (!isThisYear(todoDate)) {
+          if (isPast(todoDate)) {
+            formatedDate = format(todoDate, "MMM dd yyyy");
+            dateClassName += " date-past-other-year";
           } else {
-            formatedDate = format(new Date(date), "MMM dd");
+            formatedDate = format(todoDate, "MMM dd yyyy");
+            dateClassName += " date-future-other-year";
           }
+        } else if (isThisWeek(todoDate)) {
+          formatedDate = days[getDay(todoDate)];
+          dateClassName += " date-this-week";
+        } else {
+          formatedDate = format(todoDate, "MMM dd");
+          dateClassName += " date-future-this-year";
         }
       }
       formDisplayBottomRowContent.push(
-        createEl("div", { className: "date-container" }, [
+        createEl("div", { className: dateClassName }, [
           createEl("i", { className: "fa-regular fa-calendar-minus" }),
           createEl("p", {
             className: "date",
