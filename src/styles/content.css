@@ -139,7 +139,38 @@
   align-items: center;
   gap: 0.5rem;
   font-size: var(--font-size-small);
-  color: var(--color-text-date);
+}
+/* Date Colors - New Additions */
+.date-today {
+  color: var(--color-date-today); /* Applies #246fe0 */
+}
+
+.date-tomorrow {
+  color: var(--color-date-tomorrow); /* Applies #4CAF50 */
+}
+
+.date-yesterday {
+  color: var(--color-date-yesterday); /* Applies #FFC107 */
+}
+
+.date-this-week {
+  color: var(--color-date-this-week); /* Applies #607D8B */
+}
+
+.date-future-this-year {
+  color: var(--color-date-future-this-year); /* Applies #555555 */
+}
+
+.date-future-other-year {
+  color: var(--color-date-future-other-year); /* Applies #555555 */
+}
+
+.date-past-this-year {
+  color: var(--color-date-past-this-year); /* Applies #dc4c3e */
+}
+
+.date-past-other-year {
+  color: var(--color-date-past-other-year); /* Applies #dc4c3e */
 }
 
 .priority-low {

@@ -14,7 +14,16 @@
   --color-text: #202020;
   --color-text-secondary: #555555;
   --color-text-accent: #a81f00;
-  --color-text-date: #246fe0;
+
+  /* Date Colors - New Additions */
+  --color-date-today: #246fe0; /* Keep the existing blue for "Today" (from --color-text-date) */
+  --color-date-tomorrow: #4caf50; /* A fresh green for "Tomorrow" (suggests upcoming/fresh) */
+  --color-date-yesterday: #ffc107; /* A warm orange/amber for "Yesterday" (a warning, but not critical) */
+  --color-date-this-week: #607d8b; /* A neutral, soft blue-gray for "This Week" (calm, planned) */
+  --color-date-future-this-year: #555555; /* A standard dark grey (from --color-text-secondary) for "Future (This Year)" (standard text) */
+  --color-date-future-other-year: #555555; /* Same as above, standard text */
+  --color-date-past-this-year: #dc4c3e; /* Red from --color-accent for "Past (This Year)" (critical/overdue) */
+  --color-date-past-other-year: #dc4c3e; /* Same as above for "Past (Other Year)" */
 
   /* Priority Colors */
   --color-priority-low-border: #aaa;
@@ -32,7 +41,7 @@
   --color-get-history-text: #b85f00;
 
   /* Confirm Colors */
-  --color-warning-icon : #eb8909;
+  --color-warning-icon: #eb8909;
 
   /* Font Sizes */
   --font-size-header: 2.6rem;
@@ -106,7 +115,7 @@ button,
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-#dialog{
+#dialog {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
 }
