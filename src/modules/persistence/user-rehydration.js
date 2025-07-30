@@ -6,7 +6,7 @@ const reconstructTodo = (todoData) => {
   const todo = createTodo({
     title: todoData.title,
     description: todoData.description,
-    dueDate: todoData.dueDate,
+    dueDate: todoData.date,
     priority: todoData.priority,
     location: todoData.location,
     parent: todoData.parent,
