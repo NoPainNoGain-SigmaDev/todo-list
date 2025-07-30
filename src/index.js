@@ -4,7 +4,7 @@ import "./styles/content.css";
 import "./styles/dialog-add-new-todo.css";
 import { createUser } from "./modules/create-user.js";
 import { screenController } from "./modules/screen-controller.js";
-import { loadUserData } from "./modules/persistence/local-storage-utils.js";
+import { loadUserData, saveUserData } from "./modules/persistence/local-storage-utils.js";
 import { loadDemo } from "./modules/demo.js";
 
 const collapseSideBar = document.getElementById("collapse-side-bar");
@@ -41,5 +41,6 @@ if (loadedUser) {
 }
 
 export { user };
+saveUserData(user);
 
 screenController();
