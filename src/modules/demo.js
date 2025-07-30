@@ -511,17 +511,6 @@ export const loadDemo = (user) => {
     )
   );
 
-  user.addToProject(
-    user.newTodo(
-      "Review Chapter 2 (for consistency)",
-      "",
-      "",
-      "low",
-      creativeId,
-      novelWritingTodo.getId()
-    )
-  );
-
   const guitarPracticeTodo = user.newTodo(
     "Guitar Practice: New Song",
     "Learn 'Stairway to Heaven' solo, focusing on rhythm and lead sections.",
