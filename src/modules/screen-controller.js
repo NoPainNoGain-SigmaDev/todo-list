@@ -2,6 +2,17 @@ import { dialogController } from "./dialog-controller";
 import { createEl, clear, autoResize } from "./dom-tools";
 import { user } from "../index.js"; // Ensure user has getCurrentProjectId and updateCurrentProjectId
 import { saveUserData } from "./persistence/local-storage-utils.js";
+//Date format
+import {
+  isTomorrow,
+  isToday,
+  toDate,
+  isThisYear,
+  format,
+  getDay,
+  isThisWeek,
+  formatDate,
+} from "date-fns";
 
 export function screenController() {
   const dialogCont = dialogController();
@@ -34,7 +45,8 @@ export function screenController() {
   // Helper to get the DOM element of the currently selected project
   const getCurrentProjectElement = () => {
     const currentId = user.getCurrentProjectId();
-    if (currentId === user.getHistory().getId()) { // Check if history is the current "project"
+    if (currentId === user.getHistory().getId()) {
+      // Check if history is the current "project"
       return history;
     }
     return document.getElementById(currentId);
@@ -43,7 +55,7 @@ export function screenController() {
   // Updates the visual "selected" state and folder icon for projects
   const setCurrentProjectDisplay = () => {
     // Remove 'selected-project' from all projects and close their folders
-    projectsNav.querySelectorAll(".project").forEach(projEl => {
+    projectsNav.querySelectorAll(".project").forEach((projEl) => {
       projEl.classList.remove("selected-project");
       const icon = projEl.querySelector(".project-info i");
       if (icon) icon.classList.replace("fa-folder-open", "fa-folder-closed");
@@ -51,7 +63,6 @@ export function screenController() {
 
     // Remove 'selected-project' from history (if it was selected)
     history.classList.remove("selected-project");
-
 
     // Apply 'selected-project' to the new current project element
     const newSelectedElement = getCurrentProjectElement();
@@ -151,27 +162,56 @@ export function screenController() {
 
     const bottomRowContent = [];
 
-
-    if(todo.getSubTodos().length > 1){
+    if (todo.getSubTodos().length > 1) {
       bottomRowContent.push(
-        createEl(
-          "div",
-          { className : "sub-todos-counter"},
-          [
-            createEl("i", {className : "fa-regular fa-square-plus"}),
-            createEl("p", {className : "sub-todos-counter-text" , textContent : subTodosLength}),
-          ]
-        )
+        createEl("div", { className: "sub-todos-counter" }, [
+          createEl("i", { className: "fa-regular fa-square-plus" }),
+          createEl("p", {
+            className: "sub-todos-counter-text",
+            textContent: subTodosLength,
+          }),
+        ])
       );
     }
 
     if (todo.getDueDate().trim()) {
+      let formatedDate = "";
+      let date = [...todo.getDueDate()];
+      if (date[5] === "0") date.splice(5, 1);
+      date = date.join("");
+
+      const days = {
+        "0": "Sunday",
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday",
+      };
+
+      if (isToday(new Date(date))) {
+        formatedDate = "Today";
+      } else if (isTomorrow(new Date(date))) {
+        formatedDate = "Tomorrow";
+      } else {
+        if (!isThisYear(new Date(date))) {
+          formatedDate = format(new Date(date), "MMM dd yyyy");
+        } else {
+          if (isThisWeek(new Date(date))) {
+            formatedDate = days[getDay(new Date(date))];
+          } else {
+            formatedDate = format(new Date(date), "MMM dd");
+          }
+        }
+      }
+
       bottomRowContent.push(
         createEl("div", { className: "date-container" }, [
           createEl("i", { className: "fa-regular fa-calendar-minus" }),
           createEl("p", {
             className: "date",
-            textContent: todo.getDueDate(),
+            textContent: formatedDate,
           }),
         ])
       );
@@ -221,7 +261,7 @@ export function screenController() {
       "div",
       {
         className: "todo-container",
-        id : todo.getId(),
+        id: todo.getId(),
       },
       elements
     );
@@ -273,9 +313,8 @@ export function screenController() {
       const todoId = todoContainer.id;
       const currentProjectObject = getCurrentProjectObject(); // Get the current project object
       const currentProjectId = currentProjectObject.getId();
-      
-      let todoObj = currentProjectObject.getTodo(todoId); // Try to get direct todo or sub-todo from current project
 
+      let todoObj = currentProjectObject.getTodo(todoId); // Try to get direct todo or sub-todo from current project
 
       //delete or restore
       if (deleteBtn) {
@@ -294,7 +333,7 @@ export function screenController() {
       }
       //mark as completed
       if (toggleBtn) {
-        if(currentlyHistory)return;
+        if (currentlyHistory) return;
         user.addToHistory(todoObj);
         user.deleteTodo(todoId);
         saveUserData(user);
@@ -324,7 +363,9 @@ export function screenController() {
       "close",
       () => {
         updateProjectNav();
-        user.updateCurrentProjectId(user.getProjects()[user.getProjects().length - 1].getId()); // Select the newly added project
+        user.updateCurrentProjectId(
+          user.getProjects()[user.getProjects().length - 1].getId()
+        ); // Select the newly added project
         setCurrentProjectDisplay();
         updateProjectContent(getCurrentProjectObject());
       },
@@ -398,7 +439,7 @@ export function screenController() {
   if (!user.getCurrentProjectId()) {
     user.updateCurrentProjectId(user.getProjects()[0].getId());
   }
-  if(user.userName() !== ""){
+  if (user.userName() !== "") {
     username.value = user.userName();
   }
   updateProjectNav(); // Render project navigation initially
